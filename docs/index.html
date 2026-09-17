@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elemental Hex Tactics - Pitch Deck | Elang Esa Yudhistira</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --panel-bg: #161b22;
+            --border-color: #30363d;
+            --accent-gold: #f59e0b;
+            --accent-cyan: #06b6d4;
+            --accent-emerald: #10b981;
+            --accent-crimson: #ef4444;
+            --text-main: #f3f4f6;
+            --text-sub: #9ca3af;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .deck-container {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            max-width: 1140px;
+            height: 90%;
+            background-color: var(--panel-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 36px 44px;
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            animation: fadeIn 0.25s ease;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-header {
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .slide-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .slide-title span {
+            color: var(--accent-gold);
+        }
+
+        .slide-tag {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+        }
+
+        .slide-body {
+            flex: 1;
+            display: flex;
+            gap: 28px;
+            font-size: 16px;
+            line-height: 1.55;
+            color: var(--text-main);
+        }
+
+        .col-half {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero-title {
+            font-size: 50px;
+            font-weight: 900;
+            line-height: 1.15;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .hero-title span {
+            color: var(--accent-gold);
+        }
+
+        .hero-tagline {
+            font-size: 22px;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .badge-list {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .highlight-box {
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 4px solid var(--accent-gold);
+            padding: 14px 18px;
+            border-radius: 0 8px 8px 0;
+            margin: 12px 0;
+        }
+
+        .formula-box {
+            background: rgba(6, 182, 212, 0.1);
+            border: 1px solid var(--accent-cyan);
+            padding: 14px 18px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            margin-bottom: 16px;
+        }
+
+        .grid-2x2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.035);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .card h4 {
+            font-size: 16px;
+            color: var(--accent-gold);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card p {
+            font-size: 13.5px;
+            color: var(--text-sub);
+            line-height: 1.45;
+        }
+
+        .img-container {
+            width: 100%;
+            height: 100%;
+            max-height: 380px;
+            border-radius: 10px;
+            border: 2px solid var(--border-color);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+        }
+
+        .img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .controls-bar {
+            height: 56px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 36px;
+            background-color: var(--panel-bg);
+        }
+
+        .btn {
+            background: var(--border-color);
+            color: var(--text-main);
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--accent-cyan);
+            color: #000;
+        }
+
+        .btn-gold {
+            background: var(--accent-gold);
+            color: #000;
+        }
+        .btn-gold:hover {
+            background: #fbbf24;
+        }
+
+        .progress-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-sub);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 6px;
+        }
+
+        th, td {
+            padding: 9px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13.5px;
+        }
+
+        th {
+            color: var(--accent-cyan);
+            font-weight: 700;
+        }
+
+        .salary-highlight {
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid var(--accent-emerald);
+            color: var(--accent-emerald);
+            font-weight: 700;
+        }
+
+        .speaker-notes {
+            margin-top: 12px;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 6px;
+            border-left: 3px solid var(--accent-emerald);
+            font-size: 12.5px;
+            color: var(--text-sub);
+            font-style: italic;
+        }
+
+        @media print {
+            @page {
+                size: landscape;
+                margin: 0.5cm;
+            }
+            body {
+                background: #0d1117 !important;
+                color: #f3f4f6 !important;
+                overflow: visible !important;
+                height: auto !important;
+                width: auto !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .controls-bar {
+                display: none !important;
+            }
+            .deck-container {
+                display: block !important;
+                padding: 0 !important;
+            }
+            .slide {
+                position: relative !important;
+                display: flex !important;
+                page-break-after: always !important;
+                break-after: page !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                height: 96vh !important;
+                box-shadow: none !important;
+                border: 1px solid var(--border-color) !important;
+                margin: 0 0 20px 0 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="deck-container">
+
+        <!-- SLIDE 1: COVER -->
+        <div class="slide active">
+            <div class="slide-body">
+                <div class="col-half">
+                    <div class="slide-tag">Toge Game Fund Initiative (TGFI) Pitch</div>
+                    <h1 class="hero-title">ELEMENTAL HEX <span>TACTICS</span></h1>
+                    <div class="hero-tagline">"Where the Battlefield Itself is a Weapon"</div>
+                    <p style="font-size: 16px; color: var(--text-sub); margin-bottom: 18px; line-height: 1.6;">
+                        A 2.5D tactical RPG built around dynamic terrain, kinetic knockbacks, and land-harvesting magic. Shove enemies into rock cliffs, melt grass into lava, and siphon the earth to fuel game-ending Titan abilities.
+                    </p>
+                    <div class="badge-list">
+                        <div class="badge">👤 <strong>Developer:</strong> Elang Esa Yudhistira</div>
+                        <div class="badge">📍 Indonesia 🇮🇩</div>
+                        <div class="badge">🌐 <a href="https://nealverse.itch.io" target="_blank" style="color:var(--accent-cyan); text-decoration:none;">nealverse.itch.io</a></div>
+                        <div class="badge">✉️ yelangesa@gmail.com</div>
+                        <div class="badge">⚙️ Unity 6 (URP)</div>
+                        <div class="badge">🎮 Playable Demo Ready</div>
+                    </div>
+                </div>
+                <div class="col-half">
+                    <div class="img-container">
+                        <img src="gameplay_action.png" alt="Elemental Hex Tactics Gameplay">
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <strong>Speaker Note:</strong> "Hi Kris and the Toge team, I'm Elang, an indie developer from Indonesia. Today I'm pitching Elemental Hex Tactics, a 2.5D tactical RPG where the terrain isn't just background decor—it's an interactive weapon you shape every turn."
+            </div>
+        </div>
+
+        <!-- SLIDE 2: THE FORMULA -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-title">High Concept: <span>Why Make This Game?</span></div>
+                <div class="slide-tag">Inspirations & Core Idea</div>
+            </div>
+            <div class="slide-body">
+                <div class="col-half">
+                    <div class="formula-box">
+                        Final Fantasy Tactics + Into the Breach + MtG Land-Tapping
+                    </div>
+                    <div class="highlight-box">
+                        <strong>The problem with classic tactics:</strong> Battles often take 40+ minutes, and the terrain is just flat scenery with a generic +10% evasion stat.
+                    </div>
+                    <ul style="padding-left: 20px; color: var(--text-sub); font-size: 14.5px; line-height: 1.7;">
+                        <li><strong>Dynamic Grid:</strong> Spells physically change the ground. Fire turns grass into burning lava; water puts out fires and makes steam.</li>
+                        <li><strong>Satisfying Knockbacks:</strong> Shove enemies into walls for heavy impact damage, or push them straight into lava.</li>
+                        <li><strong>Land-Harvesting:</strong> Drain active lava or water into barren stone to power up devastating Titan spells.</li>
+                    </ul>
+                </div>
+                <div class="col-half">
+                    <div class="card" style="border-color: var(--accent-gold); margin-bottom: 14px;">
+                        <h4>🎯 Fast, Puzzle-Like Skirmishes</h4>
+                        <p>Instead of endless menus and slow math, each unit gets a clean <strong>1 Move + 1 Action</strong> turn. Battles are tight 10-minute spatial puzzles that respect the player's time.</p>
+                    </div>
+                    <div class="card" style="border-color: var(--accent-cyan);">
+                        <h4>💡 Clear Visual Feedback (Ghost UI)</h4>
+                        <p>Hovering a spell shows exactly how the terrain will react before committing, so players can plan clever chain reactions without getting confused.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <strong>Speaker Note:</strong> "I love FFT and Tactics Ogre, but I always wished the terrain did more. In Elemental Hex Tactics, combat feels like a punchy puzzle: you light the ground on fire, shove enemies into hazards, and harvest that energy for big finishers."
+            </div>
+        </div>
+
+        <!-- SLIDE 3: THE BATTLE FLOW -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-title">Combat Loop: <span>The 5-Step Turn Flow</span></div>
+                <div class="slide-tag">Core Gameplay Loop</div>
+            </div>
+            <div class="slide-body" style="flex-direction: column;">
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 16px;">
+                    <div class="card">
+                        <h4>1. Infuse</h4>
+                        <p>Cast Fireball on grass to scorch it into glowing, hazardous lava.</p>
+                    </div>
+                    <div class="card">
+                        <h4>2. Shove</h4>
+                        <p>Push an enemy into a stone cliff for slam damage, or knock them into lava.</p>
+                    </div>
+                    <div class="card">
+                        <h4>3. Attune</h4>
+                        <p>Stand on matching tiles to get buffs (Lava gives fire units +2 ATK and burn immunity).</p>
+                    </div>
+                    <div class="card">
+                        <h4>4. Siphon</h4>
+                        <p>Drain active lava into Barren Earth to harvest Elemental Cores.</p>
+                    </div>
+                    <div class="card" style="border-color: var(--accent-crimson);">
+                        <h4 style="color: var(--accent-crimson);">5. Cataclysm</h4>
+                        <p>Spend cores on the Titan's volcanic AoE to blow up surrounding enemies!</p>
+                    </div>
+                </div>
+                <div class="highlight-box">
+                    <strong>Natural Synergy:</strong> Every action naturally feeds into the next. Setting tiles on fire gives you hazards to push enemies into, buffs your fire units, and provides the fuel you need for your ultimate abilities.
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <strong>Speaker Note:</strong> "This loop creates a really satisfying rhythm: you create the fire, kick the enemy into it, stand in it to buff your dragon, harvest that fire for energy, and then wipe out the rest of the board with a screen-shaking cataclysm."
+            </div>
+        </div>
+
+        <!-- SLIDE 4: SQUAD COMBAT -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-title">The Squads: <span>2v2 Tactical Roles</span></div>
+                <div class="slide-tag">Playable Units</div>
+            </div>
+            <div class="slide-body">
+                <div class="col-half">
+                    <div class="card" style="margin-bottom: 12px; border-color: var(--accent-cyan);">
+                        <h4>🧙 The Commander (Player)</h4>
+                        <p><strong>Role:</strong> Tactician & Board Controller.<br>
+                        Squishy but agile. Uses ranged fire spells to alter terrain, water blasts to create defensive steam, and kinetic pushes to manipulate enemy positioning.</p>
+                    </div>
+                    <div class="card" style="border-color: var(--accent-crimson);">
+                        <h4>🐉 FlameFrost Dragon (Allied Titan)</h4>
+                        <p><strong>Role:</strong> Frontline Anchor & Finisher.<br>
+                        Heavy melee bruiser with 14 HP. Naturally immune to lava, controls the front lines, and siphons ground energy to cast the massive <strong>Magma Cataclysm</strong>.</p>
+                    </div>
+                </div>
+                <div class="col-half">
+                    <div class="card" style="margin-bottom: 12px; border-color: var(--accent-gold);">
+                        <h4>🔥 The Dracomancer (Enemy Boss)</h4>
+                        <p><strong>Role:</strong> Ranged Rival.<br>
+                        Commands the enemy squad, casts long-range fire spells, and tries to knock player units off high ground with his own shoves.</p>
+                    </div>
+                    <div class="card">
+                        <h4>👿 The Demon Slime (Enemy Minion)</h4>
+                        <p><strong>Role:</strong> Aggressive Swarmer.<br>
+                        Fast flanking unit that tries to hunt down your Commander and push him into dangerous terrain.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <strong>Speaker Note:</strong> "In our demo, the Commander and Titan complement each other: your Commander controls space and sets up the board from afar, while the Titan holds the frontline and executes enemies."
+            </div>
+        </div>
+
+        <!-- SLIDE 5: VISUALS & GAME FEEL -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-title">Visuals & Feel: <span>2.5D Standees & 3D Depth</span></div>
+                <div class="slide-tag">Style & Polish</div>
+            </div>
+            <div class="slide-body">
+                <div class="col-half">
+                    <div class="card" style="margin-bottom: 12px;">
+                        <h4>🎨 Retro Look, Modern Engine</h4>
+                        <p>Classic 90s sprite standees on multi-level 3D hex pillars with realistic rock cliff faces and glowing emissive lava veins.</p>
+                    </div>
+                    <div class="card" style="margin-bottom: 12px;">
+                        <h4>🎥 Full Camera Control</h4>
+                        <p>Players can smoothly rotate 360° (Q/E), pan (WASD), and zoom to inspect line-of-sight and height differences from any angle.</p>
+                    </div>
+                    <div class="card">
+                        <h4>💥 Punchy Combat Juice</h4>
+                        <p>Trauma-based screen shake on wall slams, floating damage numbers, and procedural sound effects that make every hit feel impactful.</p>
+                    </div>
+                </div>
+                <div class="col-half">
+                    <div class="img-container">
+                        <img src="gameplay_action.png" alt="In-Game Tactical HUD">
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <strong>Speaker Note:</strong> "We chose a 2.5D diorama look to capture the charm of classic tactics games, but with the benefits of Unity 6: 3D lighting, smooth camera rotation, and punchy impact effects."
+            </div>
+        </div>
+
+        <!-- SLIDE 6: MARKET FIT -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-title">Market Comps: <span>Who is this for?</span></div>
+                <div class="slide-tag">Audience & Differentiation</div>
+            </div>
+            <div class="slide-body" style="flex-direction: column;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Game</th>
+                            <th>Publisher</th>
+                            <th>What Players Love</th>
+                            <th>How We Differentiate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Vanaris Tactics</strong></td>
+                            <td>Toge Productions</td>
+                            <td>Classic FFT nostalgia, great pixel art</td>
+                            <td>We add fast kinetic shoves and real-time terrain transformation.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Into the Breach</strong></td>
+                            <td>Subset Games</td>
+                            <td>Super satisfying push puzzles</td>
+                            <td>We combine push mechanics with fantasy RPG progression and land siphoning.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Triangle Strategy</strong></td>
+                            <td>Square Enix</td>
+                            <td>HD-2D tactical presentation</td>
+                            <td>Faster 10-minute skirmishes with zero level grinding.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="highlight-box" style="margin-top: 18px;">
+                    <strong>The Opportunity:</strong> Tactics fans still love turn-based strategy, but many don't have time for slow, grindy 40-minute battles. Elemental Hex Tactics gives them deep, creative tactical decisions in fast 10-minute matches.
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <strong>Speaker Note:</strong> "Vanaris Tactics proved that Toge has a strong community for retro tactics. Elemental Hex Tactics takes that foundation and injects faster, puzzle-driven mechanics inspired by Into the Breach."
+            </div>
+        </div>
+
+        <!-- SLIDE 7: CURRENT STATUS -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-title">Current Status: <span>Playable Vertical Slice Ready</span></div>
+                <div class="slide-tag">Hands-On Verification</div>
+            </div>
+            <div class="slide-body">
+                <div class="col-half">
+                    <div class="card" style="border-color: var(--accent-emerald); margin-bottom: 12px;">
+                        <h4 style="color: var(--accent-emerald);">🏆 Fully Playable 2v2 Skirmish</h4>
+                        <p>This isn't a design concept—it's a functioning, test-driven build made in Unity 6 that you can play right now on PC.</p>
+                    </div>
+                    <ul style="padding-left: 20px; font-size: 13.5px; color: var(--text-sub); line-height: 1.7;">
+                        <li>✅ 3D procedural hex grid with multi-level elevations</li>
+                        <li>✅ Kinetic shoves with wall impact damage & lava burns</li>
+                        <li>✅ Turn-based hazard damage (units take burn damage in lava)</li>
+                        <li>✅ FFT-style terrain attunement (Flame Surge buffs & immunities)</li>
+                        <li>✅ Land siphoning and Elemental Core generation</li>
+                        <li>✅ Titan Magma Cataclysm with camera screen shake</li>
+                        <li>✅ Built-in procedural audio engine with HUD mute toggle</li>
+                        <li>✅ Complete match loop with victory/defeat screens and restart</li>
+                    </ul>
+                </div>
+                <div class="col-half">
+                    <div class="img-container">
+                        <img src="gameplay_victory.png" alt="Victory Screen">
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <strong>Speaker Note:</strong> "We aren't pitching an idea on a piece of paper. The vertical slice is completely built, tested, and playable today. You can run the Windows build and play an entire battle."
+            </div>
+        </div>
+
+        <!-- SLIDE 8: 6-MONTH ROADMAP -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-title">Roadmap: <span>6 Months to Steam Demo</span></div>
+                <div class="slide-tag">Development Milestones</div>
+            </div>
+            <div class="slide-body" style="flex-direction: column; justify-content: space-around;">
+                <div class="grid-2x2">
+                    <div class="card">
+                        <h4>Month 1–2: Custom Character Pixel Art</h4>
+                        <p>Hire a pixel artist to create 4-directional animated sprite sheets (idle, walk, attack, hurt) for 6 distinct classes.</p>
+                    </div>
+                    <div class="card">
+                        <h4>Month 3: New Biomes & Mechanics</h4>
+                        <p>Add <em>Glacial Peak</em> (ice slide push mechanics) and <em>Conductive Marsh</em> (electrifying water chain reactions).</p>
+                    </div>
+                    <div class="card">
+                        <h4>Month 4: Campaign Map & Smart AI</h4>
+                        <p>Implement world map node progression and enhance enemy AI (flanking, hazard evasion, and tactical retreating).</p>
+                    </div>
+                    <div class="card" style="border-color: var(--accent-cyan);">
+                        <h4 style="color: var(--accent-cyan);">Month 5–6: Steam Demo & Playtests</h4>
+                        <p>Commission 2 original battle themes, polish UI/SFX, and release a public 30-minute demo for Steam Next Fest.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <strong>Speaker Note:</strong> "With the core game mechanics and physics already proven in Unity, the next 6 months are focused purely on production: hiring a pixel artist for character animations, adding 2 more biomes, and shipping a public Steam demo."
+            </div>
+        </div>
+
+        <!-- SLIDE 9: THE LEAN $6,000 BUDGET -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-title">The Budget: <span>$6,000 USD (~Rp 93 Juta)</span></div>
+                <div class="slide-tag">Realistic & Sustainable</div>
+            </div>
+            <div class="slide-body">
+                <div class="col-half">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Cost (USD)</th>
+                                <th>Cost (IDR)</th>
+                                <th>Purpose</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="salary-highlight">
+                                <td><strong>Solo Dev Living Runway</strong></td>
+                                <td><strong>$3,600</strong> (60%)</td>
+                                <td>~Rp 56.000.000</td>
+                                <td><strong>$600 / mo (~Rp 9,3 jt/bln)</strong> for 6 months full-time development.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Character Pixel Art</strong></td>
+                                <td>$1,200 (20%)</td>
+                                <td>~Rp 18.500.000</td>
+                                <td>Commissioning 4-dir animated standees for 6 classes.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Original Soundtrack</strong></td>
+                                <td>$600 (10%)</td>
+                                <td>~Rp 9.300.000</td>
+                                <td>2 tactical battle tracks by an indie composer.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Steam Listing & Tools</strong></td>
+                                <td>$600 (10%)</td>
+                                <td>~Rp 9.300.000</td>
+                                <td>$100 Steam fee + essential Unity editor tools.</td>
+                            </tr>
+                            <tr style="border-top: 2px solid var(--accent-gold); font-weight: 800;">
+                                <td style="color: var(--accent-gold);">TOTAL REQUESTED</td>
+                                <td style="color: var(--accent-gold);">$6,000 USD</td>
+                                <td style="color: var(--accent-gold);">~Rp 93.000.000</td>
+                                <td>Lean, realistic grant proposal.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-half" style="background: rgba(16, 185, 129, 0.05); border: 1px solid var(--accent-emerald); border-radius: 12px; padding: 22px; justify-content: center;">
+                    <h3 style="color: var(--accent-emerald); margin-bottom: 10px;">Why This Ask Makes Sense:</h3>
+                    <ul style="padding-left: 18px; font-size: 14px; color: var(--text-sub); line-height: 1.7;">
+                        <li><strong>Low Risk for TGFI:</strong> Asking for $6,000 instead of the $10k maximum shows fiscal responsibility and clear scope control.</li>
+                        <li><strong>100% Full-Time Focus:</strong> The $600/month living stipend covers my basic living costs in Indonesia so I can work full-time without taking freelance gigs.</li>
+                        <li><strong>Publisher First Look:</strong> Toge gets the Right of First Refusal to publish the full commercial release.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <strong>Speaker Note:</strong> "I chose to ask for $6,000 instead of the full $10,000 because I want this to be a low-risk, realistic grant. $600 a month gives me enough runway to work full-time in Indonesia for 6 months without burning out, while the rest pays for art, music, and the Steam fee."
+            </div>
+        </div>
+
+        <!-- SLIDE 10: DEVELOPER & CONTACT -->
+        <div class="slide">
+            <div class="slide-header">
+                <div class="slide-title">Developer & <span>Contact</span></div>
+                <div class="slide-tag">Let's Connect</div>
+            </div>
+            <div class="slide-body">
+                <div class="col-half">
+                    <div class="card" style="margin-bottom: 14px;">
+                        <h4>👤 Elang Esa Yudhistira</h4>
+                        <p><strong>Role:</strong> Solo Game Designer & Programmer<br>
+                        <strong>Location:</strong> Indonesia 🇮🇩<br>
+                        <strong>Portfolio:</strong> <a href="https://nealverse.itch.io" target="_blank" style="color:var(--accent-cyan);">nealverse.itch.io</a><br>
+                        <strong>Email:</strong> <a href="mailto:yelangesa@gmail.com" style="color:var(--accent-gold); text-decoration:none;">yelangesa@gmail.com</a></p>
+                    </div>
+                    <div class="highlight-box">
+                        <strong>Ready to Evaluate:</strong> The standalone Windows build and 60-second gameplay video are ready for hands-on review.
+                    </div>
+                </div>
+                <div class="col-half">
+                    <div class="card" style="border-color: var(--accent-gold);">
+                        <h4>📫 Submission Summary</h4>
+                        <p style="margin-bottom: 8px;"><strong>Developer:</strong> Elang Esa Yudhistira</p>
+                        <p style="margin-bottom: 8px;"><strong>Email:</strong> yelangesa@gmail.com</p>
+                        <p style="margin-bottom: 8px;"><strong>Portfolio:</strong> <a href="https://nealverse.itch.io" target="_blank" style="color:var(--accent-cyan);">https://nealverse.itch.io</a></p>
+                        <p style="margin-bottom: 8px;"><strong>Engine:</strong> Unity 6 (URP 3D)</p>
+                        <p><strong>Demo:</strong> Standalone Windows Executable (.exe)</p>
+                    </div>
+                    <div style="text-align: center; margin-top: 18px; color: var(--accent-gold); font-size: 18px; font-weight: 700;">
+                        I would love the chance to work with Toge Productions to bring this game to life.
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                <strong>Speaker Note:</strong> "Thank you for taking the time to review Elemental Hex Tactics. I'd love to hear your thoughts, get feedback from the team, and discuss how we can bring this game to tactical RPG fans worldwide."
+            </div>
+        </div>
+
+    </div>
+
+    <!-- NAVIGATION BAR -->
+    <div class="controls-bar">
+        <button class="btn" id="prevBtn" onclick="prevSlide()">◀ Previous</button>
+        <div class="progress-text" id="progressText">Slide 1 of 10</div>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+            <button class="btn btn-gold" id="nextBtn" onclick="nextSlide()">Next ▶</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const progressText = document.getElementById('progressText');
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlide);
+            });
+            progressText.innerText = `Slide ${currentSlide + 1} of ${slides.length}`;
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+    </script>
+</body>
+</html>
