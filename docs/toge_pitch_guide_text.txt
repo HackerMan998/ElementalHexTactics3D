@@ -1,0 +1,35 @@
+Developing a game and publishing it is a different story. While you are enjoying being creative in game development, in the end you need to bring your game to business end. If you are new to publishing, you might feel unsure on how to do it right. In this case, you can approach an experienced publisher to help you tackle that issue.
+Started as an independent game developer that only worked in a garage, we also didn’t know how to approach a publisher back then. Now, after years of experience and finally becoming an indie publisher ourselves, we can share some advice on how to pitch your game to a publisher.
+Your game might have the most fascinating gameplay, compelling story, or features charming art. But how to present them in the most appealing way to the publishers? Here are some things that you can do, starting from presenting short description about your game to spilling out the juicy details.
+Elevator Pitch
+The simplest, yet effective way to hook publishers is by using elevator pitch. Imagine you were in an elevator with someone and that person asked you, “what game are you working on?” Find one or two sentences that best describe your game and could get their interest. Below are the example from our games:
+My Lovely Daughter
+Coffee Talk.
+Pitch Deck
+The next one is pitch deck. Here you are going to need to prepare a short, concise, and informative presentation about your game; not just one or two sentences of description. A typical pitch deck should contain:
+A. Game Title
+To have a unique name ready for your game is important.It will help not only the publisher, but also potential players to be familiar with your game.
+B. High Concept
+One or two sentences that best describe your game. May include the Elevator Pitch sentence or tagline hook.
+C. Hooks
+Present them with what makes your game standout from the communique and interesting to your target audience. Show core features, screenshots or videos.
+D. Market Research
+Identify your target audience, your competition, benchmark, market positioning, pricing, target platforms, etc.
+E. The Ask
+What are you asking from the publisher; is it funding, devkits, marketing, or all of them? And why this particular publisher is fit for this game? Explain how you are going to utilize it in the Execution Plan.
+F. Execution Plan
+Elaborate when did you start your project, how many people in your team, your progress, and how long will it take to complete in here. You might also want to include a burn chart and other important technical information.
+G. Team Bio
+Explain who are the people in your team, their skills, and experience. Include information that can convince the publisher that your team will be able to pull this off.
+Playable Demo
+Show don’t tell. By showing the publisher a playable demo build of your game, it would give them more reason to fall in love with your game. A minimum viable product or vertical slice with the core features implemented is the best to show your game’s potentials.
+We are going to tell you a story about one of our published game:
+Ultra Space Battle Brawl.
+Two years before jumping into full development, Mojiken Studio already showcased a demo that introduce the fun gameplay USBB has. Not only it was useful for us—the publisher, but it is also good to validate the game mechanic and promote the game even before the development start.
+One more thing you need to know about demo build: it doesn’t have to be something related directly with gameplay.
+A Space for the Unbound,
+also by Mojiken Studio, has a demo that showcased art direction, feels, and teaser of the story the game want to convey.
+You might find more ways to approach a publisher and pitch your game yourself, but that’s about the basic that would be handy for now. A good preparation and a pinch of courage to show your game will surely help the game grow tremendously. We will also be more than happy to help you grow with your game. If you have a game to show, prepare your pitch and don’t be shy to contact us to our email at
+publishing@togeproductions.com
+We can’t wait to see your game’s goodness!
+Share this:
