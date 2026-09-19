@@ -15,3 +15,4 @@
 - **Scroll:** Zoom
 - **L-Click:** Select / Act
 - **R-Click:** Cancel
+

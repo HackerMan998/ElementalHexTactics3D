@@ -85,3 +85,4 @@ Standing on active environmental tiles passively infuses units with FFT-inspired
 ### 3. `💨 Vapor Shroud`
 - **Trigger:** Unit stands inside a `TileState.Steam` vapor cloud.
 - **Buff:** Conceals the unit inside billowing mist, granting damage mitigation and obscuring sightlines.
+

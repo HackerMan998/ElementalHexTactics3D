@@ -71,3 +71,4 @@ Before committing any elemental spell, hovering over any hex tile renders the **
 - **Target:** Hex coordinates and current state/tier.
 - **Output:** The resulting state and tier (highlighted in golden yellow if a reaction occurs).
 - **Description:** A concise italic summary explaining what will happen.
+

@@ -84,3 +84,4 @@ The user interface is drawn cleanly via [`HexGridInteraction3D.cs`](../Assets/Sc
 4. **⚡ Predictive Ghost UI Preview:**
    - When aiming an elemental spell (`Fireball`, `Water`, or `Earth Spire`) at a hex tile, a predictive tactical card appears in the bottom-right viewport.
    - Clearly reveals the **predicted reaction name**, resulting tile state, resulting tier level, and tactical description **before** committing the action!
+

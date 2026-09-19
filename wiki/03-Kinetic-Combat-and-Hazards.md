@@ -79,3 +79,4 @@ Instead of dealing passive damage, deep fluids and quagmires deny enemy agency t
 | **Molten Magma** | 3 Burn Damage | ❌ Suffers Damage | ✅ **Immune** (Molten scales) |
 | **Deep Water (Tier 2)** | Submersion (Immobilize + Cripple) | ✅ **Immune** (Aquatic mobility) | ✅ **Immune** (Colossal stature) |
 | **Mud Quagmire** | Mud Trap (Immobilize + Cripple) | ❌ Trapped | ✅ **Immune** (Tramples through) |
+

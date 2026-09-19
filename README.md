@@ -88,3 +88,4 @@ Explore the full game design and technical documentation in the [`wiki/`](./wiki
 
 **Developed with ❤️ by Elang Esa Yudhistira (Neal Sage / NealversePrime)**  
 *Solo Indie Game Designer & Programmer*
+

@@ -99,3 +99,4 @@ To maintain a rock-solid 60+ FPS on all platforms:
    - Manhattan distance between any two hexes is calculated in $\mathcal{O}(1)$ time:
      $$\text{dist}(A, B) = \frac{|q_A - q_B| + |r_A - r_B| + |s_A - s_B|}{2}$$
    - Fast $k$-ring radius generation without redundant loops.
+
