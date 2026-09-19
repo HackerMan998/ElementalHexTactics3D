@@ -248,7 +248,7 @@ namespace ElementalHexTactics3D.UI
 
             if (TitleMenuManager3D.Instance != null)
             {
-                TitleMenuManager3D.Instance.ReturnToTitle();
+                TitleMenuManager3D.Instance.ReturnToTitleScreen();
             }
         }
 
