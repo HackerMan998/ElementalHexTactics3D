@@ -151,6 +151,14 @@ namespace ElementalHexTactics3D.Turn
                         }
                     }
                 }
+                else
+                {
+                    // If unit starts turn on safe ground outside hazardous fluids, clear any leftover mobility debuffs!
+                    if (u.IsImmobilized || u.IsCrippled)
+                    {
+                        u.ClearMobilityDebuffs();
+                    }
+                }
             }
             CheckBattleConditions();
         }
@@ -271,25 +279,56 @@ namespace ElementalHexTactics3D.Turn
             if (targetPlayer.CurrentTile == null) targetPlayer.ReacquireCurrentTile();
 
             int currentDist = enemy.Coordinates.DistanceTo(targetPlayer.Coordinates);
+            bool isDracomancer = enemy.UnitName.Contains("Dracomancer") || enemy.Archetype == UnitArchetype.Commander;
 
-            // 1. ADVANCE TOWARDS TARGET IF OUT OF MELEE RANGE
-            if (currentDist > 1)
+            // 1. POSITIONING / ADVANCEMENT
+            if (isDracomancer)
             {
-                var path = HexPathfinder3D.FindPath(HexGrid3D.Instance, enemy.CurrentTile, targetPlayer.CurrentTile);
-                if (path != null && path.Count > 1)
+                // Ranged Pyromancer: only advance if out of spell casting range (distance > 3)
+                if (currentDist > 3)
                 {
-                    int steps = Mathf.Min(enemy.EffectiveMoveRange, path.Count - 1);
-                    if (steps > 0)
+                    var path = HexPathfinder3D.FindPath(HexGrid3D.Instance, enemy.CurrentTile, targetPlayer.CurrentTile);
+                    if (path != null && path.Count > 1)
                     {
-                        CombatFeedbackManager.Instance.ShowBanner("ENEMY MOVEMENT", $"{enemy.UnitName} is advancing!", 0.8f, new Color(0.95f, 0.45f, 0.2f));
-                        List<HexTile3D> movePath = new List<HexTile3D>();
-                        for (int i = 0; i < steps; i++)
+                        // Step forward just enough to reach casting range (distance <= 3)
+                        int desiredSteps = path.Count - 3;
+                        int steps = Mathf.Clamp(desiredSteps, 1, enemy.EffectiveMoveRange);
+                        if (steps > 0)
                         {
-                            movePath.Add(path[i]);
-                        }
+                            CombatFeedbackManager.Instance.ShowBanner("ENEMY MOVEMENT", $"{enemy.UnitName} approaches to cast!", 0.8f, new Color(0.95f, 0.45f, 0.2f));
+                            List<HexTile3D> movePath = new List<HexTile3D>();
+                            for (int i = 0; i < steps; i++)
+                            {
+                                movePath.Add(path[i]);
+                            }
 
-                        yield return enemy.MoveAlongPath(movePath, stepDuration: 0.22f);
-                        yield return new WaitForSeconds(0.35f);
+                            yield return enemy.MoveAlongPath(movePath, stepDuration: 0.22f);
+                            yield return new WaitForSeconds(0.35f);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // Melee Minions (Demon Slime): advance towards melee contact if out of range (> 1)
+                if (currentDist > 1)
+                {
+                    var path = HexPathfinder3D.FindPath(HexGrid3D.Instance, enemy.CurrentTile, targetPlayer.CurrentTile);
+                    if (path != null && path.Count > 1)
+                    {
+                        int steps = Mathf.Min(enemy.EffectiveMoveRange, path.Count - 1);
+                        if (steps > 0)
+                        {
+                            CombatFeedbackManager.Instance.ShowBanner("ENEMY MOVEMENT", $"{enemy.UnitName} is advancing!", 0.8f, new Color(0.95f, 0.45f, 0.2f));
+                            List<HexTile3D> movePath = new List<HexTile3D>();
+                            for (int i = 0; i < steps; i++)
+                            {
+                                movePath.Add(path[i]);
+                            }
+
+                            yield return enemy.MoveAlongPath(movePath, stepDuration: 0.22f);
+                            yield return new WaitForSeconds(0.35f);
+                        }
                     }
                 }
             }
@@ -297,10 +336,35 @@ namespace ElementalHexTactics3D.Turn
             // 2. COMBAT ACTION
             int newDist = enemy.Coordinates.DistanceTo(targetPlayer.Coordinates);
 
-            // Option A: Adjacent (Melee Strike or Push)
-            if (newDist == 1)
+            if (isDracomancer)
             {
-                if (enemy.Archetype == UnitArchetype.Minion)
+                // Dracomancer pyromancy: cast Fireball at target (range 1-3) - NO PUSHING!
+                if (newDist <= 3)
+                {
+                    string bannerTitle = (newDist == 1) ? "🔥 POINT-BLANK FIRE!" : "ENEMY SPELL!";
+                    string bannerMsg = (newDist == 1) 
+                        ? $"{enemy.UnitName} scorches {targetPlayer.UnitName} with point-blank flames!" 
+                        : $"{enemy.UnitName} casts 🔥 Fireball at {targetPlayer.UnitName}!";
+
+                    CombatFeedbackManager.Instance.ShowBanner(bannerTitle, bannerMsg, 1.1f, new Color(1.0f, 0.45f, 0.1f));
+                    yield return enemy.PlayAttackLunge(targetPlayer.transform.position, 0.22f);
+
+                    Vector3 casterHand = enemy.transform.position + Vector3.up * 0.8f;
+                    Vector3 targetChest = targetPlayer.transform.position + Vector3.up * 0.8f;
+                    yield return CombatFeedbackManager.Instance.SpawnSpellProjectile(casterHand, targetChest, new Color(1.0f, 0.4f, 0.1f), 0.28f);
+
+                    TerrainReactionSystem.ApplySpell(targetPlayer.CurrentTile, ElementType.Fire, damage: 3);
+                    yield return new WaitForSeconds(0.7f);
+                }
+                else
+                {
+                    yield return new WaitForSeconds(0.3f);
+                }
+            }
+            else
+            {
+                // Melee Minion attack (Demon Slime)
+                if (newDist == 1)
                 {
                     CombatFeedbackManager.Instance.ShowBanner("MINION ATTACK!", $"{enemy.UnitName} strikes {targetPlayer.UnitName}!", 1.0f, new Color(0.95f, 0.35f, 0.2f));
                     yield return enemy.PlayAttackLunge(targetPlayer.transform.position, 0.22f);
@@ -309,28 +373,8 @@ namespace ElementalHexTactics3D.Turn
                 }
                 else
                 {
-                    CombatFeedbackManager.Instance.ShowBanner("ENEMY ATTACK!", $"{enemy.UnitName} unleashes 💨 Kinetic Push!", 1.1f, new Color(0.85f, 0.25f, 0.95f));
-                    yield return enemy.PlayAttackLunge(targetPlayer.transform.position, 0.24f);
-                    yield return PushMechanic3D.ExecutePushRoutine(enemy, targetPlayer, HexGrid3D.Instance);
-                    yield return new WaitForSeconds(0.6f);
+                    yield return new WaitForSeconds(0.3f);
                 }
-            }
-            // Option B: Ranged Spell (Dracomancer Fireball)
-            else if (newDist <= 3 && (enemy.Archetype == UnitArchetype.Commander || enemy.UnitName.Contains("Dracomancer")))
-            {
-                CombatFeedbackManager.Instance.ShowBanner("ENEMY SPELL!", $"{enemy.UnitName} casts 🔥 Fireball at {targetPlayer.UnitName}!", 1.1f, new Color(1.0f, 0.45f, 0.1f));
-                yield return enemy.PlayAttackLunge(targetPlayer.transform.position, 0.22f);
-
-                Vector3 casterHand = enemy.transform.position + Vector3.up * 0.8f;
-                Vector3 targetChest = targetPlayer.transform.position + Vector3.up * 0.8f;
-                yield return CombatFeedbackManager.Instance.SpawnSpellProjectile(casterHand, targetChest, new Color(1.0f, 0.4f, 0.1f), 0.28f);
-
-                TerrainReactionSystem.ApplySpell(targetPlayer.CurrentTile, ElementType.Fire, damage: 3);
-                yield return new WaitForSeconds(0.7f);
-            }
-            else
-            {
-                yield return new WaitForSeconds(0.3f);
             }
         }
 

@@ -162,6 +162,17 @@ namespace ElementalHexTactics3D.Units
             UpdateBaseRingVisuals();
         }
 
+        public void ClearMobilityDebuffs()
+        {
+            if (immobilizeTurns > 0 || crippleTurns > 0)
+            {
+                immobilizeTurns = 0;
+                crippleTurns = 0;
+                UpdateAttunement();
+                UpdateBaseRingVisuals();
+            }
+        }
+
         public void OnTurnEnd()
         {
             if (immobilizeTurns > 0)
@@ -545,6 +556,16 @@ namespace ElementalHexTactics3D.Units
                     Debug.Log($"<color=#8D6E63><b>[Mud Quagmire Trap!]</b></color> {unitName} caught in sticky Mud! Immobilized 1 round.");
                     CombatFeedbackManager.Instance?.SpawnDamageText(transform.position, "💩 MUD TRAP! (Immobilized)", new Color(0.75f, 0.55f, 0.35f), 1.5f);
                     TacticalCameraController.Instance?.Shake(0.18f, 0.20f);
+                }
+            }
+            // 4. Safe / Dry ground outside hazards -> Immediately frees unit from fluid traps!
+            else
+            {
+                if (immobilizeTurns > 0 || crippleTurns > 0)
+                {
+                    ClearMobilityDebuffs();
+                    Debug.Log($"<color=#66BB6A><b>[Freed!]</b></color> {unitName} reached safe ground ({tile.State})! Mobility debuff removed.");
+                    CombatFeedbackManager.Instance?.SpawnDamageText(transform.position, "FREED! (Move Restored)", new Color(0.4f, 0.9f, 0.5f), 1.3f);
                 }
             }
         }
