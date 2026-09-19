@@ -567,6 +567,9 @@ namespace ElementalHexTactics3D.Units
                 CombatFeedbackManager.Instance.SpawnDamageText(transform.position, label, textColor);
             }
 
+            // Trigger procedural particle hit sparks
+            CombatVFXManager.Instance?.PlayHitSparks(transform.position + Vector3.up * 0.75f, textColor);
+
             // Visual shudder
             if (gameObject.activeInHierarchy)
             {
@@ -582,6 +585,7 @@ namespace ElementalHexTactics3D.Units
         private void Die()
         {
             Debug.Log($"<color=#D32F2F><b>[Defeated]</b></color> {unitName} has fallen in battle!");
+            CombatVFXManager.Instance?.PlayWallSlam(transform.position + Vector3.up * 0.6f, Vector3.up);
             if (currentTile != null && currentTile.CurrentOccupant == this)
             {
                 currentTile.CurrentOccupant = null;

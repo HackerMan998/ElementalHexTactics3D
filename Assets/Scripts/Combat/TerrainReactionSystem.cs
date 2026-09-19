@@ -148,6 +148,20 @@ namespace ElementalHexTactics3D.Combat
             TerrainReactionResult reaction = PredictReaction(tile.State, tile.TierLevel, spell);
             tile.SetState(reaction.ResultingState, reaction.ResultingTier);
 
+            // Trigger elemental reaction VFX
+            if (reaction.ResultingState == TileState.Steam)
+            {
+                CombatVFXManager.Instance?.PlaySteamCloud(tile.GetTopCenterPosition());
+            }
+            else if (spell == ElementType.Fire)
+            {
+                CombatVFXManager.Instance?.PlayFireBurst(tile.GetTopCenterPosition());
+            }
+            else if (spell == ElementType.Water)
+            {
+                CombatVFXManager.Instance?.PlayWaterSplash(tile.GetTopCenterPosition());
+            }
+
             // 2. Damage unit occupying the tile & refresh attunement
             TacticalUnit3D occupant = tile.CurrentOccupant as TacticalUnit3D;
             if (occupant != null)

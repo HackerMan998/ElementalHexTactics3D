@@ -46,6 +46,8 @@ namespace ElementalHexTactics3D.Combat
                 yield return new WaitForSeconds(0.15f);
                 TacticalCameraController.Instance?.Shake(0.32f, 0.35f);
                 SoundManager3D.Instance?.PlaySlam(1.3f);
+                Vector3 slamPos = target.transform.position + Vector3.up * 0.5f;
+                CombatVFXManager.Instance?.PlayWallSlam(slamPos, Vector3.up);
                 if (target != null && target.CurrentHealth > 0)
                 {
                     target.TakeDamage(2, "💥 WALL SLAM! -2");
@@ -68,6 +70,7 @@ namespace ElementalHexTactics3D.Combat
                 yield return new WaitForSeconds(0.1f);
                 TacticalCameraController.Instance?.Shake(0.35f, 0.40f);
                 SoundManager3D.Instance?.PlaySpellCast(isFire: true);
+                CombatVFXManager.Instance?.PlayFireBurst(destTile.GetTopCenterPosition());
                 if (target != null && target.CurrentHealth > 0)
                 {
                     target.TakeDamage(3, "🔥 MAGMA BURN! -3");
@@ -79,6 +82,7 @@ namespace ElementalHexTactics3D.Combat
                 yield return new WaitForSeconds(0.1f);
                 TacticalCameraController.Instance?.Shake(0.22f, 0.25f);
                 SoundManager3D.Instance?.PlaySpellCast(isFire: false);
+                CombatVFXManager.Instance?.PlayWaterSplash(destTile.GetTopCenterPosition());
                 if (target != null && target.CurrentHealth > 0)
                 {
                     target.TakeDamage(2, "🌊 WATER PLUNGE! -2");

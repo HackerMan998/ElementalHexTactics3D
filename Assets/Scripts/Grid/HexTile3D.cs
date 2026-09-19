@@ -1,5 +1,6 @@
 using UnityEngine;
 using ElementalHexTactics3D.Units;
+using ElementalHexTactics3D.Combat;
 
 namespace ElementalHexTactics3D.Grid
 {
@@ -28,6 +29,7 @@ namespace ElementalHexTactics3D.Grid
         private Material currentTopMaterial;
         private Material currentSideMaterial;
         private MaterialPropertyBlock propBlock;
+        private GameObject ambientVfxObj;
         private bool isHovered = false;
         private bool isSelected = false;
         private bool isReachable = false;
@@ -110,6 +112,30 @@ namespace ElementalHexTactics3D.Grid
             UpdateVisuals();
         }
 
+        private void Start()
+        {
+            UpdateAmbientVFX();
+        }
+
+        private void UpdateAmbientVFX()
+        {
+            if (state == TileState.Magma)
+            {
+                if (ambientVfxObj == null && CombatVFXManager.Instance != null)
+                {
+                    ambientVfxObj = CombatVFXManager.Instance.AttachLavaEmbers(transform);
+                }
+            }
+            else
+            {
+                if (ambientVfxObj != null)
+                {
+                    Destroy(ambientVfxObj);
+                    ambientVfxObj = null;
+                }
+            }
+        }
+
         /// <summary>
         /// Changes the elemental state and tier of the tile, updating to the correct elemental material.
         /// </summary>
@@ -127,6 +153,8 @@ namespace ElementalHexTactics3D.Grid
             {
                 UpdateVisuals();
             }
+
+            UpdateAmbientVFX();
         }
 
         public void SetTopMaterial(Material topMat)
@@ -213,6 +241,14 @@ namespace ElementalHexTactics3D.Grid
         public Vector3 GetTopCenterPosition()
         {
             return transform.position;
+        }
+
+        private void OnDestroy()
+        {
+            if (ambientVfxObj != null)
+            {
+                Destroy(ambientVfxObj);
+            }
         }
     }
 }

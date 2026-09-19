@@ -4,6 +4,8 @@ using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using ElementalHexTactics3D.Grid;
 using ElementalHexTactics3D.CameraControl;
 using ElementalHexTactics3D.InputHandling;
@@ -69,6 +71,12 @@ namespace ElementalHexTactics3D.Editor
             // 10. Setup Sound Manager (Procedural Audio & SFX)
             SetupSoundManager();
 
+            // 11. Setup Combat VFX Manager (Procedural Particle Systems)
+            SetupCombatVFX();
+
+            // 12. Setup HD-2D Post-Processing Volume (Bloom, Tilt-Shift DoF, Tonemapping)
+            SetupPostProcessingVolume();
+
             // Mark scene dirty so user can save
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
             Debug.Log("<color=#4CAF50><b>[ElementalHex3D]</b></color> 3D Hex Battlefield, 2.5D Units & Combat Systems setup complete!");
@@ -102,6 +110,88 @@ namespace ElementalHexTactics3D.Editor
                 GameObject turnObj = new GameObject("TurnManager");
                 turnMgr = turnObj.AddComponent<TurnManager3D>();
             }
+        }
+
+        private static void SetupCombatVFX()
+        {
+            CombatVFXManager vfx = Object.FindFirstObjectByType<CombatVFXManager>();
+            if (vfx == null)
+            {
+                GameObject vfxObj = new GameObject("CombatVFXManager");
+                vfx = vfxObj.AddComponent<CombatVFXManager>();
+            }
+        }
+
+        private static void SetupPostProcessingVolume()
+        {
+            Volume volume = Object.FindFirstObjectByType<Volume>();
+            if (volume == null)
+            {
+                GameObject volObj = new GameObject("Global PostProcess Volume");
+                volume = volObj.AddComponent<Volume>();
+            }
+            volume.isGlobal = true;
+
+            string profilePath = "Assets/Settings/HD2D_TacticsProfile.asset";
+            VolumeProfile profile = AssetDatabase.LoadAssetAtPath<VolumeProfile>(profilePath);
+            if (profile == null)
+            {
+                profile = ScriptableObject.CreateInstance<VolumeProfile>();
+                AssetDatabase.CreateAsset(profile, profilePath);
+            }
+
+            // 1. Bloom (Makes lava embers, glowing runes, and magic burst radiate)
+            if (!profile.TryGet<Bloom>(out var bloom))
+            {
+                bloom = profile.Add<Bloom>(true);
+            }
+            bloom.active = true;
+            bloom.threshold.overrideState = true;
+            bloom.threshold.value = 0.85f;
+            bloom.intensity.overrideState = true;
+            bloom.intensity.value = 1.15f;
+            bloom.scatter.overrideState = true;
+            bloom.scatter.value = 0.65f;
+
+            // 2. Depth Of Field (HD-2D Tilt-Shift diorama tabletop blur)
+            if (!profile.TryGet<DepthOfField>(out var dof))
+            {
+                dof = profile.Add<DepthOfField>(true);
+            }
+            dof.active = true;
+            dof.mode.overrideState = true;
+            dof.mode.value = DepthOfFieldMode.Bokeh;
+            dof.focusDistance.overrideState = true;
+            dof.focusDistance.value = 12.0f; // Center plateau focus
+            dof.focalLength.overrideState = true;
+            dof.focalLength.value = 65f;
+            dof.aperture.overrideState = true;
+            dof.aperture.value = 3.2f;
+
+            // 3. Tonemapping (ACES Fantasy saturation and contrast)
+            if (!profile.TryGet<Tonemapping>(out var tonemapping))
+            {
+                tonemapping = profile.Add<Tonemapping>(true);
+            }
+            tonemapping.active = true;
+            tonemapping.mode.overrideState = true;
+            tonemapping.mode.value = TonemappingMode.ACES;
+
+            // 4. Vignette (Dramatic border shading)
+            if (!profile.TryGet<Vignette>(out var vignette))
+            {
+                vignette = profile.Add<Vignette>(true);
+            }
+            vignette.active = true;
+            vignette.intensity.overrideState = true;
+            vignette.intensity.value = 0.22f;
+            vignette.smoothness.overrideState = true;
+            vignette.smoothness.value = 0.35f;
+
+            EditorUtility.SetDirty(profile);
+            AssetDatabase.SaveAssets();
+
+            volume.sharedProfile = profile;
         }
 
         private static Material EnsureElementalMaterial(
@@ -192,6 +282,14 @@ namespace ElementalHexTactics3D.Editor
             cam.nearClipPlane = 0.3f;
             cam.farClipPlane = 150f;
             cam.clearFlags = CameraClearFlags.Skybox;
+
+            // Enable URP Post-Processing on Camera
+            var camData = cam.GetComponent<UniversalAdditionalCameraData>();
+            if (camData == null)
+            {
+                camData = cam.gameObject.AddComponent<UniversalAdditionalCameraData>();
+            }
+            camData.renderPostProcessing = true;
 
             camCtrl.ApplyCameraTransform();
         }
