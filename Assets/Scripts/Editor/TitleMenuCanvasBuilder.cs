@@ -80,6 +80,13 @@ namespace ElementalHexTactics3D.Editor
             GameObject titleRootObj = CreateUIObject("Panel_TitleScreenRoot", canvasObj.transform);
             SetStretchAll(titleRootObj.GetComponent<RectTransform>());
 
+            // Soft Diorama Dimmer / Vignette (Keeps 3D diorama visible while giving UI dramatic contrast)
+            GameObject dimmerObj = CreateUIObject("DioramaDimmer", titleRootObj.transform);
+            SetStretchAll(dimmerObj.GetComponent<RectTransform>());
+            Image dimmerImg = dimmerObj.AddComponent<Image>();
+            dimmerImg.color = new Color(0.04f, 0.06f, 0.09f, 0.45f);
+            dimmerImg.raycastTarget = false;
+
             // Top Gold Decorative Stripe (Thin 6px bar at very top)
             GameObject stripeObj = CreateUIObject("TopGoldStripe", titleRootObj.transform);
             RectTransform stripeRect = stripeObj.GetComponent<RectTransform>();
@@ -97,8 +104,8 @@ namespace ElementalHexTactics3D.Editor
             headerRect.anchorMin = new Vector2(0.5f, 1f);
             headerRect.anchorMax = new Vector2(0.5f, 1f);
             headerRect.pivot = new Vector2(0.5f, 1f);
-            headerRect.sizeDelta = new Vector2(920f, 230f);
-            headerRect.anchoredPosition = new Vector2(0f, -40f);
+            headerRect.sizeDelta = new Vector2(880f, 260f);
+            headerRect.anchoredPosition = new Vector2(0f, -30f);
 
             Image headerImg = headerObj.AddComponent<Image>();
             if (panelFrame != null)
@@ -113,11 +120,11 @@ namespace ElementalHexTactics3D.Editor
             }
 
             // Header Texts inside Title Card
-            CreateUIText("Text_Badge", headerObj.transform, "✦ LIGHT NOVEL / MANHWA EDITION • PROLOGUE: RANK-F ✦", fontBold, 17, FontStyle.Bold, new Color(0.22f, 0.74f, 0.96f), new Vector2(0f, 62f), new Vector2(850f, 28f));
-            CreateUIText("Text_Title1", headerObj.transform, "I REINCARNATED AS A BEAST TALKER,", fontBold, 30, FontStyle.Bold, Color.white, new Vector2(0f, 26f), new Vector2(850f, 40f));
-            CreateUIText("Text_Title2", headerObj.transform, "NOW I'M COLLECTING BEASTS!", fontBold, 34, FontStyle.Bold, new Color(0.98f, 0.75f, 0.15f), new Vector2(0f, -14f), new Vector2(850f, 44f));
-            CreateUIText("Text_Subtitle", headerObj.transform, "〜 2.5D Tactical Hex Battle & Primordial Resonance 〜", fontRegular, 17, FontStyle.Italic, new Color(0.72f, 0.78f, 0.86f), new Vector2(0f, -52f), new Vector2(850f, 26f));
-            CreateUIText("Text_Version", headerObj.transform, "Elemental Hex Tactics 3D • TGFI Pre-Alpha v0.2.0 • Solo Dev by Neal Sage", fontRegular, 13, FontStyle.Normal, new Color(0.55f, 0.60f, 0.68f), new Vector2(0f, -80f), new Vector2(850f, 22f));
+            CreateUIText("Text_Badge", headerObj.transform, "✦ LIGHT NOVEL / MANHWA EDITION • PROLOGUE: RANK-F ✦", fontBold, 15, FontStyle.Bold, new Color(0.25f, 0.78f, 1.0f), new Vector2(0f, 75f), new Vector2(840f, 28f));
+            CreateUIText("Text_Title1", headerObj.transform, "I REINCARNATED AS A BEAST TALKER,", fontBold, 28, FontStyle.Bold, Color.white, new Vector2(0f, 32f), new Vector2(840f, 48f));
+            CreateUIText("Text_Title2", headerObj.transform, "NOW I'M COLLECTING BEASTS!", fontBold, 34, FontStyle.Bold, new Color(1f, 0.85f, 0.25f), new Vector2(0f, -14f), new Vector2(840f, 52f));
+            CreateUIText("Text_Subtitle", headerObj.transform, "〜 2.5D Tactical Hex Battle & Primordial Resonance 〜", fontRegular, 15, FontStyle.Italic, new Color(0.80f, 0.85f, 0.92f), new Vector2(0f, -58f), new Vector2(840f, 26f));
+            CreateUIText("Text_Version", headerObj.transform, "Elemental Hex Tactics 3D • TGFI Pre-Alpha v0.2.0 • Solo Dev by Neal Sage", fontRegular, 12, FontStyle.Normal, new Color(0.60f, 0.65f, 0.72f), new Vector2(0f, -86f), new Vector2(840f, 22f));
 
             // 8. Panel: Menu Buttons (Center)
             GameObject menuBoxObj = CreateUIObject("Panel_MenuButtons", titleRootObj.transform);
@@ -125,22 +132,22 @@ namespace ElementalHexTactics3D.Editor
             menuBoxRect.anchorMin = new Vector2(0.5f, 0.5f);
             menuBoxRect.anchorMax = new Vector2(0.5f, 0.5f);
             menuBoxRect.pivot = new Vector2(0.5f, 0.5f);
-            menuBoxRect.sizeDelta = new Vector2(440f, 380f);
-            menuBoxRect.anchoredPosition = new Vector2(0f, -100f);
+            menuBoxRect.sizeDelta = new Vector2(380f, 310f);
+            menuBoxRect.anchoredPosition = new Vector2(0f, -75f);
 
             VerticalLayoutGroup vlg = menuBoxObj.AddComponent<VerticalLayoutGroup>();
-            vlg.spacing = 14;
+            vlg.spacing = 10;
             vlg.childAlignment = TextAnchor.MiddleCenter;
             vlg.childControlWidth = true;
             vlg.childControlHeight = true;
             vlg.childForceExpandWidth = true;
             vlg.childForceExpandHeight = false;
 
-            Button btnPlay = CreateCustomButton("Btn_PlayAdventure", menuBoxObj.transform, "⚔️ PLAY ADVENTURE", fontBold, 22, btnHighlight != null ? btnHighlight : btnNormal, new Color(1f, 0.92f, 0.45f), height: 58f);
-            Button btnStory = CreateCustomButton("Btn_StoryLore", menuBoxObj.transform, "📖 STORY & LORE (Rank-F)", fontBold, 19, btnNormal, Color.white, height: 56f);
-            Button btnHowToPlay = CreateCustomButton("Btn_HowToPlay", menuBoxObj.transform, "🎮 HOW TO PLAY (Tactics)", fontBold, 19, btnNormal, Color.white, height: 56f);
-            Button btnOptions = CreateCustomButton("Btn_Options", menuBoxObj.transform, "⚙️ OPTIONS (Settings)", fontBold, 19, btnNormal, Color.white, height: 56f);
-            Button btnExit = CreateCustomButton("Btn_Exit", menuBoxObj.transform, "🚪 EXIT GAME", fontBold, 19, btnNormal, new Color(0.95f, 0.55f, 0.55f), height: 56f);
+            Button btnPlay = CreateCustomButton("Btn_PlayAdventure", menuBoxObj.transform, "⚔️ PLAY ADVENTURE", fontBold, 20, btnHighlight != null ? btnHighlight : btnNormal, new Color(1f, 0.92f, 0.45f), height: 52f);
+            Button btnStory = CreateCustomButton("Btn_StoryLore", menuBoxObj.transform, "📖 STORY & LORE (Rank-F)", fontBold, 17, btnNormal, Color.white, height: 50f);
+            Button btnHowToPlay = CreateCustomButton("Btn_HowToPlay", menuBoxObj.transform, "🎮 HOW TO PLAY (Tactics)", fontBold, 17, btnNormal, Color.white, height: 50f);
+            Button btnOptions = CreateCustomButton("Btn_Options", menuBoxObj.transform, "⚙️ OPTIONS (Settings)", fontBold, 17, btnNormal, Color.white, height: 50f);
+            Button btnExit = CreateCustomButton("Btn_Exit", menuBoxObj.transform, "🚪 EXIT GAME", fontBold, 17, btnNormal, new Color(0.95f, 0.55f, 0.55f), height: 50f);
 
             // 9. Modals Container
             GameObject modalsContainer = CreateUIObject("Panel_ModalsContainer", canvasObj.transform);
@@ -417,6 +424,8 @@ namespace ElementalHexTactics3D.Editor
             text.alignment = TextAnchor.MiddleCenter;
             text.color = textColor;
             text.raycastTarget = false;
+            text.horizontalOverflow = HorizontalWrapMode.Overflow;
+            text.verticalOverflow = VerticalWrapMode.Overflow;
 
             Shadow shadow = textObj.AddComponent<Shadow>();
             shadow.effectColor = new Color(0f, 0f, 0f, 0.95f);
@@ -486,6 +495,8 @@ namespace ElementalHexTactics3D.Editor
             text.color = color;
             text.raycastTarget = false;
             text.supportRichText = true;
+            text.horizontalOverflow = HorizontalWrapMode.Overflow;
+            text.verticalOverflow = VerticalWrapMode.Overflow;
 
             Shadow shadow = textObj.AddComponent<Shadow>();
             shadow.effectColor = new Color(0f, 0f, 0f, 0.95f);

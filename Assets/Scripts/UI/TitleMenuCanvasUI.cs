@@ -84,6 +84,7 @@ namespace ElementalHexTactics3D.UI
             }
 
             AdjustModalLayouts();
+            AdjustTitleScreenLayout();
         }
 
         /// <summary>
@@ -193,6 +194,124 @@ namespace ElementalHexTactics3D.UI
                         if (tRect != null) tRect.anchoredPosition = new Vector2(0f, 205f);
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Restores missing title texts, applies overflow to prevent clipping,
+        /// sharpens button proportions, and adds soft diorama background dimming.
+        /// </summary>
+        private void AdjustTitleScreenLayout()
+        {
+            if (titlePanel == null) return;
+
+            Transform header = titlePanel.transform.Find("Panel_TitleHeader");
+            if (header != null)
+            {
+                RectTransform hRect = header.GetComponent<RectTransform>();
+                if (hRect != null)
+                {
+                    hRect.sizeDelta = new Vector2(880f, 260f);
+                    hRect.anchoredPosition = new Vector2(0f, -30f);
+                }
+
+                Transform tBadge = header.Find("Text_Badge");
+                if (tBadge != null)
+                {
+                    var r = tBadge.GetComponent<RectTransform>();
+                    if (r != null) { r.anchoredPosition = new Vector2(0f, 75f); r.sizeDelta = new Vector2(840f, 28f); }
+                    var txt = tBadge.GetComponent<Text>();
+                    if (txt != null) { txt.horizontalOverflow = HorizontalWrapMode.Overflow; txt.verticalOverflow = VerticalWrapMode.Overflow; }
+                }
+
+                Transform t1 = header.Find("Text_Title1");
+                if (t1 != null)
+                {
+                    var r = t1.GetComponent<RectTransform>();
+                    if (r != null) { r.anchoredPosition = new Vector2(0f, 32f); r.sizeDelta = new Vector2(840f, 48f); }
+                    var txt = t1.GetComponent<Text>();
+                    if (txt != null)
+                    {
+                        txt.text = "I REINCARNATED AS A BEAST TALKER,";
+                        txt.fontSize = 28;
+                        txt.color = Color.white;
+                        txt.fontStyle = FontStyle.Bold;
+                        txt.horizontalOverflow = HorizontalWrapMode.Overflow;
+                        txt.verticalOverflow = VerticalWrapMode.Overflow;
+                    }
+                }
+
+                Transform t2 = header.Find("Text_Title2");
+                if (t2 != null)
+                {
+                    var r = t2.GetComponent<RectTransform>();
+                    if (r != null) { r.anchoredPosition = new Vector2(0f, -14f); r.sizeDelta = new Vector2(840f, 52f); }
+                    var txt = t2.GetComponent<Text>();
+                    if (txt != null)
+                    {
+                        txt.text = "NOW I'M COLLECTING BEASTS!";
+                        txt.fontSize = 34;
+                        txt.color = new Color(1f, 0.85f, 0.25f);
+                        txt.fontStyle = FontStyle.Bold;
+                        txt.horizontalOverflow = HorizontalWrapMode.Overflow;
+                        txt.verticalOverflow = VerticalWrapMode.Overflow;
+                    }
+                }
+
+                Transform sub = header.Find("Text_Subtitle");
+                if (sub != null)
+                {
+                    var r = sub.GetComponent<RectTransform>();
+                    if (r != null) { r.anchoredPosition = new Vector2(0f, -58f); r.sizeDelta = new Vector2(840f, 26f); }
+                    var txt = sub.GetComponent<Text>();
+                    if (txt != null) { txt.horizontalOverflow = HorizontalWrapMode.Overflow; txt.verticalOverflow = VerticalWrapMode.Overflow; }
+                }
+
+                Transform ver = header.Find("Text_Version");
+                if (ver != null)
+                {
+                    var r = ver.GetComponent<RectTransform>();
+                    if (r != null) { r.anchoredPosition = new Vector2(0f, -86f); r.sizeDelta = new Vector2(840f, 22f); }
+                    var txt = ver.GetComponent<Text>();
+                    if (txt != null) { txt.horizontalOverflow = HorizontalWrapMode.Overflow; txt.verticalOverflow = VerticalWrapMode.Overflow; }
+                }
+            }
+
+            Transform menuButtons = titlePanel.transform.Find("Panel_MenuButtons");
+            if (menuButtons != null)
+            {
+                RectTransform mRect = menuButtons.GetComponent<RectTransform>();
+                if (mRect != null)
+                {
+                    mRect.sizeDelta = new Vector2(380f, 310f);
+                    mRect.anchoredPosition = new Vector2(0f, -75f);
+                }
+                var vlg = menuButtons.GetComponent<VerticalLayoutGroup>();
+                if (vlg != null) vlg.spacing = 10;
+
+                Text[] buttonTexts = menuButtons.GetComponentsInChildren<Text>(true);
+                foreach (var bt in buttonTexts)
+                {
+                    bt.horizontalOverflow = HorizontalWrapMode.Overflow;
+                    bt.verticalOverflow = VerticalWrapMode.Overflow;
+                }
+            }
+
+            // Ensure soft dimmer vignette behind title panel
+            Transform dimmer = titlePanel.transform.Find("DioramaDimmer");
+            if (dimmer == null)
+            {
+                GameObject dimmerObj = new GameObject("DioramaDimmer", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+                dimmerObj.transform.SetParent(titlePanel.transform, false);
+                dimmerObj.transform.SetAsFirstSibling();
+                RectTransform dRect = dimmerObj.GetComponent<RectTransform>();
+                dRect.anchorMin = Vector2.zero;
+                dRect.anchorMax = Vector2.one;
+                dRect.sizeDelta = Vector2.zero;
+                dRect.anchoredPosition = Vector2.zero;
+                Image dImg = dimmerObj.GetComponent<Image>();
+                dImg.color = new Color(0.04f, 0.06f, 0.09f, 0.45f);
+                dImg.raycastTarget = false;
             }
         }
 
