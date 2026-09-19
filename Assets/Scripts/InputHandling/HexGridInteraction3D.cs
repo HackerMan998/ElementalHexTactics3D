@@ -7,6 +7,7 @@ using ElementalHexTactics3D.Units;
 using ElementalHexTactics3D.Combat;
 using ElementalHexTactics3D.Turn;
 using ElementalHexTactics3D.CameraControl;
+using ElementalHexTactics3D.UI;
 
 namespace ElementalHexTactics3D.InputHandling
 {
@@ -79,6 +80,16 @@ namespace ElementalHexTactics3D.InputHandling
             {
                 mainCamera = UnityEngine.Camera.main;
                 if (mainCamera == null) return;
+            }
+
+            if (TitleMenuManager3D.Instance != null && (!TitleMenuManager3D.Instance.IsInGame || TitleMenuManager3D.Instance.IsPaused))
+            {
+                if (currentHoveredTile != null)
+                {
+                    currentHoveredTile.SetHovered(false);
+                    currentHoveredTile = null;
+                }
+                return;
             }
 
             if (TurnManager3D.Instance != null && TurnManager3D.Instance.Result != BattleResult.InProgress)
@@ -757,6 +768,11 @@ namespace ElementalHexTactics3D.InputHandling
             if (!Application.isPlaying) return;
 
             EnsureSolidTexture();
+
+            if (TitleMenuManager3D.Instance != null && (!TitleMenuManager3D.Instance.IsInGame || TitleMenuManager3D.Instance.IsPaused))
+            {
+                return; // Suppress standard combat HUD when Title/Options/Pause menu is active
+            }
 
             if (TurnManager3D.Instance != null && TurnManager3D.Instance.Result != BattleResult.InProgress)
             {

@@ -87,6 +87,20 @@ namespace ElementalHexTactics3D.CameraControl
 
         private void HandleRotationInput()
         {
+            // If on Title Screen, gently auto-orbit the diorama for a stunning anime background!
+            if (ElementalHexTactics3D.UI.TitleMenuManager3D.Instance != null &&
+                ElementalHexTactics3D.UI.TitleMenuManager3D.Instance.IsOnTitleScreen)
+            {
+                targetYaw += 9f * Time.deltaTime;
+                return;
+            }
+
+            if (ElementalHexTactics3D.UI.TitleMenuManager3D.Instance != null &&
+                ElementalHexTactics3D.UI.TitleMenuManager3D.Instance.IsPaused)
+            {
+                return;
+            }
+
             var keyboard = Keyboard.current;
             if (keyboard == null) return;
 
@@ -106,6 +120,13 @@ namespace ElementalHexTactics3D.CameraControl
                     targetYaw += rotInput * rotationSpeed * Time.deltaTime;
                 }
             }
+        }
+
+        public void ResetToTacticalView()
+        {
+            targetFocusPoint = Vector3.zero;
+            targetYaw = 0f;
+            targetDistance = 14f;
         }
 
         private void HandlePanInput()
