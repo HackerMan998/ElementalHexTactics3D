@@ -76,11 +76,11 @@ namespace ElementalHexTactics3D.UI
                 return;
             }
 
-            // If legacy TitleMenuManager3D exists, disable it so it doesn't block gameplay input/HUD
+            // If legacy TitleMenuManager3D exists, destroy it so it never causes state conflicts or reloads
             GameObject legacy = GameObject.Find("TitleMenuManager3D");
             if (legacy != null && legacy != gameObject)
             {
-                legacy.SetActive(false);
+                Destroy(legacy);
             }
 
             AdjustModalLayouts();
@@ -245,11 +245,6 @@ namespace ElementalHexTactics3D.UI
             if (titlePanel != null) titlePanel.SetActive(true);
             if (inGameHudPanel != null) inGameHudPanel.SetActive(false);
             CloseAllModals();
-
-            if (TitleMenuManager3D.Instance != null)
-            {
-                TitleMenuManager3D.Instance.ReturnToTitleScreen();
-            }
         }
 
         public void OnPlayClicked()
@@ -261,11 +256,6 @@ namespace ElementalHexTactics3D.UI
             if (titlePanel != null) titlePanel.SetActive(false);
             if (inGameHudPanel != null) inGameHudPanel.SetActive(true);
             CloseAllModals();
-
-            if (TitleMenuManager3D.Instance != null)
-            {
-                TitleMenuManager3D.Instance.StartGame();
-            }
 
             if (TacticalCameraController.Instance != null)
             {
@@ -288,11 +278,6 @@ namespace ElementalHexTactics3D.UI
             PlaySoundClick();
             isPaused = true;
             if (pauseModal != null) pauseModal.SetActive(true);
-
-            if (TitleMenuManager3D.Instance != null)
-            {
-                TitleMenuManager3D.Instance.OpenPauseMenu();
-            }
         }
 
         public void ResumeGame()
@@ -301,11 +286,6 @@ namespace ElementalHexTactics3D.UI
             isPaused = false;
             if (pauseModal != null) pauseModal.SetActive(false);
             CloseAllModals();
-
-            if (TitleMenuManager3D.Instance != null)
-            {
-                TitleMenuManager3D.Instance.ResumeGame();
-            }
         }
 
         public void OpenModal(GameObject modal)

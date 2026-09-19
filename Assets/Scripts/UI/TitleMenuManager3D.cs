@@ -201,11 +201,6 @@ namespace ElementalHexTactics3D.UI
         {
             PlaySoundClick();
             currentState = TitleMenuState.TitleScreen;
-            // Optionally reload scene or reset
-            if (TurnManager3D.Instance != null)
-            {
-                TurnManager3D.Instance.RestartBattle();
-            }
         }
 
         public void QuitGame()
