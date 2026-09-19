@@ -39,7 +39,7 @@ flowchart LR
 
 #### 1. `🔥 Fireball` (Commander)
 - **Range:** 3 Hexes | **Damage:** 3 HP
-- **Effect:** Launches a fiery projectile. Deals direct damage and transforms terrain (Water $\rightarrow$ Steam, Scorched $\rightarrow$ Magma).
+- **Effect:** Launches a fiery projectile. Deals direct damage and transforms terrain (Water → Steam, Scorched → Magma).
 
 #### 2. `💧 Water Surge` (Commander)
 - **Range:** 3 Hexes | **Damage:** 2 HP
@@ -69,18 +69,18 @@ flowchart LR
 
 ## 🧙 FFT Geomancer-Style Attunement
 
-Standing on active environmental tiles passively infuses units with FFT-inspired dynamic buffs evaluated continuously by [`TacticalUnit3D.UpdateAttunement()`](../Assets/Scripts/Units/TacticalUnit3D.cs):
+Standing on active environmental tiles passively infuses units with FFT-inspired dynamic buffs evaluated continuously by [`TacticalUnit3D.UpdateAttunement()`](https://github.com/NealversePrime/ElementalHexTactics3D/blob/main/Assets/Scripts/Units/TacticalUnit3D.cs):
 
 ### 1. `🔥 Flame Surge`
 - **Trigger:** Unit stands on `Scorched Earth` or `Magma` with Fire Affinity or Titan archetype.
 - **Buff:** **+2 Bonus Attack Damage** on all physical strikes!
-- **Visuals:** Base ring glows radiant fiery orange-gold (`#FF841A`, scale $1.15\times$).
+- **Visuals:** Base ring glows radiant fiery orange-gold (`#FF841A`, scale 1.15x).
 - **Immunity:** Titans gain full immunity to Magma burn damage. (Humanoid casters still take damage if immersed in molten lava).
 
 ### 2. `💧 Aqua Surge`
 - **Trigger:** Unit stands on `Water` with Water Affinity or Titan archetype.
 - **Buff:** **+1 Bonus Move Range**!
-- **Visuals:** Base ring glows brilliant electric cyan (`#33D9FF`, scale $1.15\times$).
+- **Visuals:** Base ring glows brilliant electric cyan (`#33D9FF`, scale 1.15x).
 
 ### 3. `💨 Vapor Shroud`
 - **Trigger:** Unit stands inside a `TileState.Steam` vapor cloud.

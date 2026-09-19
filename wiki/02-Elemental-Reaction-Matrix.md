@@ -1,6 +1,6 @@
 # 02. Elemental Reaction Matrix (Core Triad)
 
-The battlefield in **Elemental Hex Tactics 3D** is living matter. Every hex tile possesses an **Elemental State** and a **Tier Level** governed by [`TerrainReactionSystem.cs`](../Assets/Scripts/Combat/TerrainReactionSystem.cs).
+The battlefield in **Elemental Hex Tactics 3D** is living matter. Every hex tile possesses an **Elemental State** and a **Tier Level** governed by [`TerrainReactionSystem.cs`](https://github.com/NealversePrime/ElementalHexTactics3D/blob/main/Assets/Scripts/Combat/TerrainReactionSystem.cs).
 
 ---
 

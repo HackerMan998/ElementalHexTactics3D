@@ -13,7 +13,7 @@
 
 ## 🕹️ Tactical Camera Controls
 
-The camera system is managed by [`TacticalCameraController.cs`](../Assets/Scripts/Camera/TacticalCameraController.cs), designed to deliver smooth tactical agency:
+The camera system is managed by [`TacticalCameraController.cs`](https://github.com/NealversePrime/ElementalHexTactics3D/blob/main/Assets/Scripts/Camera/TacticalCameraController.cs), designed to deliver smooth tactical agency:
 
 ```mermaid
 flowchart LR
@@ -39,7 +39,7 @@ flowchart LR
 
 ## ⏱️ Turn Structure & Action Economy
 
-The turn loop is coordinated by [`TurnManager3D.cs`](../Assets/Scripts/Turn/TurnManager3D.cs). Combat proceeds in structured rounds consisting of alternating faction phases.
+The turn loop is coordinated by [`TurnManager3D.cs`](https://github.com/NealversePrime/ElementalHexTactics3D/blob/main/Assets/Scripts/Turn/TurnManager3D.cs). Combat proceeds in structured rounds consisting of alternating faction phases.
 
 ### Round Progression:
 1. **Player Phase:**
@@ -64,7 +64,7 @@ Each unit has two independent action flags per turn:
 
 ## 🖥️ Tactical HUD & Interface
 
-The user interface is drawn cleanly via [`HexGridInteraction3D.cs`](../Assets/Scripts/InputHandling/HexGridInteraction3D.cs) with 100% opaque slate backgrounds to ensure maximum readability:
+The user interface is drawn cleanly via [`HexGridInteraction3D.cs`](https://github.com/NealversePrime/ElementalHexTactics3D/blob/main/Assets/Scripts/InputHandling/HexGridInteraction3D.cs) with 100% opaque slate backgrounds to ensure maximum readability:
 
 1. **Top-Left Tactical HUD (`Rect(16, 16, 400, 185)`):**
    - Displays Round number, Active Turn Phase, Audio Mute toggle, and Camera Shortcuts.

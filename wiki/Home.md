@@ -38,9 +38,9 @@ flowchart TD
 ## 💡 Quick Summary of Core Mechanics
 
 ### 1. The Triad Elements: Fire, Water, Earth
-- **Fire (`🔥`)**: Charred earth $\rightarrow$ Scorched Earth (Tier 1) $\rightarrow$ Molten Magma (Tier 2).
-- **Water (`💧`)**: Inundation $\rightarrow$ Shallow Water (Tier 1) $\rightarrow$ Deep Water (Tier 2).
-- **Earth (`⛰️`)**: Solid ground $\rightarrow$ Stone Pillars (Obstacles) / Quagmire Mud Traps.
+- **Fire (`🔥`)**: Charred earth → Scorched Earth (Tier 1) → Molten Magma (Tier 2).
+- **Water (`💧`)**: Inundation → Shallow Water (Tier 1) → Deep Water (Tier 2).
+- **Earth (`⛰️`)**: Solid ground → Stone Pillars (Obstacles) / Quagmire Mud Traps.
 - **Steam (`💨`)**: Fire + Water or Magma + Water creates tactical smokescreens. Quenching Magma triggers a **3-Hex random adjacent Steam Eruption**!
 
 ### 2. Kinetic Shoves & Wall Slams

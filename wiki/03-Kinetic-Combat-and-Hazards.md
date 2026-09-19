@@ -6,7 +6,7 @@ In **Elemental Hex Tactics 3D**, combat is heavily physical. Inspired by *Into t
 
 ## 💨 The Kinetic Push Mechanic
 
-Kinetic push attacks are executed via [`PushMechanic3D.cs`](../Assets/Scripts/Combat/PushMechanic3D.cs):
+Kinetic push attacks are executed via [`PushMechanic3D.cs`](https://github.com/NealversePrime/ElementalHexTactics3D/blob/main/Assets/Scripts/Combat/PushMechanic3D.cs):
 
 ```mermaid
 flowchart TD
@@ -24,7 +24,11 @@ flowchart TD
 
 ### Directional Calculation:
 When a push action is triggered, `PushMechanic3D.GetPushDirection()` calculates the exact hex vector from the caster's coordinates to the target's coordinates:
-$$\vec{d}_{\text{push}} = \vec{C}_{\text{target}} - \vec{C}_{\text{caster}}$$
+
+```text
+PushDirection = TargetCoordinates - CasterCoordinates
+```
+
 If the caster is adjacent to the target, the push direction aligns with one of the 6 hexagonal axes. The target is shoved exactly 1 hex along this trajectory.
 
 ---
@@ -34,7 +38,7 @@ If the caster is adjacent to the target, the push direction aligns with one of t
 A push displacement is considered **Blocked** if any of the following conditions are met:
 1. **Off-Grid Edge:** The destination coordinates are beyond the boundary of the battlefield.
 2. **Occupied Tile:** Another unit is already standing on the destination hex.
-3. **Steep Cliff:** The destination tile has an elevation difference greater than 1 level ($|\Delta h| > 1$).
+3. **Steep Cliff:** The destination tile has an elevation difference greater than 1 level (elevation difference > 1).
 4. **Solid Stone Pillar:** The destination tile has a raised `TileState.StonePillar`.
 
 ### Collision Consequences:
@@ -61,7 +65,7 @@ Instead of dealing passive damage, deep fluids and quagmires deny enemy agency t
 - Base ring indicator glows with a dark amber/brown trap indicator (`#BF7333`).
 
 ### 2. `🦶 Crippled` (Turn 2):
-- **Effect:** The unit's `EffectiveMoveRange` is capped at **1** hex ($\min(1, \text{Range})$).
+- **Effect:** The unit's `EffectiveMoveRange` is capped at **1** hex (maximum 1 tile).
 - The unit can only crawl 1 hex to escape the hazard.
 - Overhead text announces: `CRIPPLED (Move: 1)`.
 
