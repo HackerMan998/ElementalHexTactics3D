@@ -35,14 +35,16 @@ namespace ElementalHexTactics3D.Combat
             target.TakeDamage(1, "💨 PUSH! -1");
             if (target == null || target.CurrentHealth <= 0) yield break;
 
-            // 2. CASE 1: BLOCKED (Off-grid edge, occupied tile, or steep cliff > 1)
+            // 2. CASE 1: BLOCKED (Off-grid edge, occupied tile, solid Stone Pillar, or steep cliff > 1)
             bool isBlocked = (destTile == null) ||
                              destTile.IsOccupied ||
+                             destTile.State == TileState.StonePillar ||
                              (target.CurrentTile != null && Mathf.Abs(destTile.Elevation - target.CurrentTile.Elevation) > 1);
 
             if (isBlocked)
             {
-                Debug.Log($"<color=#EF5350><b>[Wall Slam!]</b></color> {target.UnitName}'s push was blocked! Slammed into obstacle for 2 collision damage.");
+                string slamCause = (destTile != null && destTile.State == TileState.StonePillar) ? "into a Stone Pillar!" : "into an obstacle!";
+                Debug.Log($"<color=#EF5350><b>[Wall Slam!]</b></color> {target.UnitName}'s push was blocked {slamCause} Took 2 collision damage.");
                 yield return new WaitForSeconds(0.15f);
                 TacticalCameraController.Instance?.Shake(0.32f, 0.35f);
                 SoundManager3D.Instance?.PlaySlam(1.3f);
@@ -66,27 +68,25 @@ namespace ElementalHexTactics3D.Combat
             // 4. Check Environmental Hazards on destination tile upon landing
             if (destTile.State == TileState.Magma)
             {
-                Debug.Log($"<color=#FF3D00><b>[Hazard Ignition!]</b></color> {target.UnitName} was pushed into molten Magma! Took 3 bonus burn damage.");
+                Debug.Log($"<color=#FF3D00><b>[Hazard Ignition!]</b></color> {target.UnitName} was pushed into molten Magma!");
                 yield return new WaitForSeconds(0.1f);
                 TacticalCameraController.Instance?.Shake(0.35f, 0.40f);
                 SoundManager3D.Instance?.PlaySpellCast(isFire: true);
                 CombatVFXManager.Instance?.PlayFireBurst(destTile.GetTopCenterPosition());
-                if (target != null && target.CurrentHealth > 0)
-                {
-                    target.TakeDamage(3, "🔥 MAGMA BURN! -3");
-                }
             }
             else if (destTile.State == TileState.Water && destTile.TierLevel >= 2)
             {
-                Debug.Log($"<color=#0288D1><b>[Deep Water Submersion!]</b></color> {target.UnitName} was plunged into Deep Water! Took 2 bonus hazard damage.");
+                Debug.Log($"<color=#0288D1><b>[Deep Water Submersion!]</b></color> {target.UnitName} was plunged into Deep Water!");
                 yield return new WaitForSeconds(0.1f);
                 TacticalCameraController.Instance?.Shake(0.22f, 0.25f);
                 SoundManager3D.Instance?.PlaySpellCast(isFire: false);
                 CombatVFXManager.Instance?.PlayWaterSplash(destTile.GetTopCenterPosition());
-                if (target != null && target.CurrentHealth > 0)
-                {
-                    target.TakeDamage(2, "🌊 WATER PLUNGE! -2");
-                }
+            }
+            else if (destTile.State == TileState.Mud)
+            {
+                Debug.Log($"<color=#8D6E63><b>[Mud Trap!]</b></color> {target.UnitName} was plunged into sticky Mud!");
+                yield return new WaitForSeconds(0.1f);
+                TacticalCameraController.Instance?.Shake(0.18f, 0.20f);
             }
         }
 

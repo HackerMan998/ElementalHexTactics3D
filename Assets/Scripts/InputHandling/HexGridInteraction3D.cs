@@ -16,6 +16,7 @@ namespace ElementalHexTactics3D.InputHandling
         Move,
         Fireball,
         WaterSurge,
+        EarthSpire,
         KineticPush,
         TitanStrike,
         ConsumeLand,
@@ -292,6 +293,7 @@ namespace ElementalHexTactics3D.InputHandling
 
                 case UnitActionMode.Fireball:
                 case UnitActionMode.WaterSurge:
+                case UnitActionMode.EarthSpire:
                     var spellTiles = HexGrid3D.Instance.GetTilesInRange(currentSelectedUnit.Coordinates, 3);
                     foreach (var tile in spellTiles)
                     {
@@ -398,6 +400,13 @@ namespace ElementalHexTactics3D.InputHandling
                     currentSelectedUnit.HasActedThisTurn = true;
                     ClearTargetHighlights();
                     StartCoroutine(ExecutePlayerSpell(targetTile, ElementType.Water, 2, new Color(0.2f, 0.7f, 1.0f)));
+                    SetActionMode(UnitActionMode.None);
+                    break;
+
+                case UnitActionMode.EarthSpire:
+                    currentSelectedUnit.HasActedThisTurn = true;
+                    ClearTargetHighlights();
+                    StartCoroutine(ExecutePlayerSpell(targetTile, ElementType.Earth, 2, new Color(0.65f, 0.48f, 0.28f)));
                     SetActionMode(UnitActionMode.None);
                     break;
 
@@ -728,7 +737,7 @@ namespace ElementalHexTactics3D.InputHandling
 
         private void DrawTacticalInfoHUD()
         {
-            hudRect = new Rect(16, 16, 430, 185);
+            hudRect = new Rect(16, 16, 400, 185);
             DrawSolidPanel(hudRect, new Color(0.08f, 0.10f, 0.14f, 0.95f), new Color(0.25f, 0.35f, 0.48f, 1f), 2);
 
             GUILayout.BeginArea(new Rect(hudRect.x + 12, hudRect.y + 10, hudRect.width - 24, hudRect.height - 20));
@@ -790,7 +799,7 @@ namespace ElementalHexTactics3D.InputHandling
             bool canMove = canAct && !currentSelectedUnit.HasMovedThisTurn;
             bool canCombat = canAct && !currentSelectedUnit.HasActedThisTurn;
 
-            float barWidth = 760f;
+            float barWidth = 800f;
             float barHeight = 62f;
             float startX = (Screen.width - barWidth) * 0.5f;
             float startY = Screen.height - barHeight - 16f;
@@ -880,8 +889,8 @@ namespace ElementalHexTactics3D.InputHandling
             else
             {
                 // COMMANDER ABILITY: Fireball
-                Rect fireRect = new Rect(curX, btnY, 100f, btnH);
-                curX += 100f + spacing;
+                Rect fireRect = new Rect(curX, btnY, 90f, btnH);
+                curX += 90f + spacing;
                 string fireLabel = (currentSelectedUnit != null && currentSelectedUnit.HasActedThisTurn)
                     ? "<color=#90A4AE>🔥 Fireball\n<size=10>(Acted)</size></color>"
                     : "🔥 Fireball\n<size=10>(Dmg 3)</size>";
@@ -893,8 +902,8 @@ namespace ElementalHexTactics3D.InputHandling
                 }
 
                 // COMMANDER ABILITY: Water Surge
-                Rect waterRect = new Rect(curX, btnY, 100f, btnH);
-                curX += 100f + spacing;
+                Rect waterRect = new Rect(curX, btnY, 90f, btnH);
+                curX += 90f + spacing;
                 string waterLabel = (currentSelectedUnit != null && currentSelectedUnit.HasActedThisTurn)
                     ? "<color=#90A4AE>💧 Water\n<size=10>(Acted)</size></color>"
                     : "💧 Water\n<size=10>(Dmg 2)</size>";
@@ -905,9 +914,22 @@ namespace ElementalHexTactics3D.InputHandling
                     SetActionMode(currentMode == UnitActionMode.WaterSurge ? UnitActionMode.None : UnitActionMode.WaterSurge);
                 }
 
+                // COMMANDER ABILITY: Earth Spire
+                Rect earthRect = new Rect(curX, btnY, 105f, btnH);
+                curX += 105f + spacing;
+                string earthLabel = (currentSelectedUnit != null && currentSelectedUnit.HasActedThisTurn)
+                    ? "<color=#90A4AE>⛰️ Earth Spire\n<size=10>(Acted)</size></color>"
+                    : "⛰️ Earth Spire\n<size=10>(Wall/Mud)</size>";
+                if (DrawOpaqueButton(earthRect, earthLabel,
+                    new Color(0.40f, 0.28f, 0.18f, 1f), new Color(0.70f, 0.52f, 0.30f, 1f),
+                    currentMode == UnitActionMode.EarthSpire, canCombat))
+                {
+                    SetActionMode(currentMode == UnitActionMode.EarthSpire ? UnitActionMode.None : UnitActionMode.EarthSpire);
+                }
+
                 // COMMANDER ABILITY: Kinetic Push
-                Rect pushRect = new Rect(curX, btnY, 95f, btnH);
-                curX += 95f + spacing;
+                Rect pushRect = new Rect(curX, btnY, 90f, btnH);
+                curX += 90f + spacing;
                 string pushLabel = (currentSelectedUnit != null && currentSelectedUnit.HasActedThisTurn)
                     ? "<color=#90A4AE>💨 Push\n<size=10>(Acted)</size></color>"
                     : "💨 Push\n<size=10>(Shove 1)</size>";
@@ -920,11 +942,11 @@ namespace ElementalHexTactics3D.InputHandling
 
                 // COMMANDER ABILITY: Siphon Land
                 bool canSiphon = canCombat && HasConsumableTilesNearby(currentSelectedUnit);
-                Rect siphonRect = new Rect(curX, btnY, 120f, btnH);
-                curX += 120f + spacing;
+                Rect siphonRect = new Rect(curX, btnY, 110f, btnH);
+                curX += 110f + spacing;
                 string siphonLabel = (currentSelectedUnit != null && currentSelectedUnit.HasActedThisTurn)
-                    ? "<color=#90A4AE>⚡ Siphon Land\n<size=10>(Acted)</size></color>"
-                    : "⚡ Siphon Land\n<size=10>(+1 Core)</size>";
+                    ? "<color=#90A4AE>⚡ Siphon\n<size=10>(Acted)</size></color>"
+                    : "⚡ Siphon\n<size=10>(+1 Core)</size>";
                 if (DrawOpaqueButton(siphonRect, siphonLabel,
                     new Color(0.70f, 0.55f, 0.15f, 1f), new Color(1.0f, 0.82f, 0.20f, 1f),
                     currentMode == UnitActionMode.ConsumeLand, canSiphon))
@@ -951,7 +973,7 @@ namespace ElementalHexTactics3D.InputHandling
         private void DrawGhostUIPreview()
         {
             if (currentHoveredTile == null ||
-                (currentMode != UnitActionMode.Fireball && currentMode != UnitActionMode.WaterSurge) ||
+                (currentMode != UnitActionMode.Fireball && currentMode != UnitActionMode.WaterSurge && currentMode != UnitActionMode.EarthSpire) ||
                 !activeTargetTiles.Contains(currentHoveredTile))
             {
                 isGhostUIVisible = false;
@@ -959,7 +981,9 @@ namespace ElementalHexTactics3D.InputHandling
             }
 
             isGhostUIVisible = true;
-            ElementType spellElement = (currentMode == UnitActionMode.Fireball) ? ElementType.Fire : ElementType.Water;
+            ElementType spellElement = (currentMode == UnitActionMode.Fireball)
+                ? ElementType.Fire
+                : (currentMode == UnitActionMode.WaterSurge ? ElementType.Water : ElementType.Earth);
             TerrainReactionResult preview = TerrainReactionSystem.PredictReaction(currentHoveredTile.State, currentHoveredTile.TierLevel, spellElement);
 
             float w = 360f;

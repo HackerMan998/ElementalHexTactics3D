@@ -35,6 +35,7 @@ namespace ElementalHexTactics3D.Grid
         private bool isReachable = false;
 
         private Vector3 restingLocalPosition;
+        private Vector3 originalBasePosition;
 
         public HexCoordinates Coordinates => coordinates;
         public int Elevation => elevation;
@@ -72,6 +73,7 @@ namespace ElementalHexTactics3D.Grid
         private void Awake()
         {
             EnsureComponents();
+            originalBasePosition = transform.localPosition;
             restingLocalPosition = transform.localPosition;
             propBlock = new MaterialPropertyBlock();
         }
@@ -108,6 +110,7 @@ namespace ElementalHexTactics3D.Grid
                 meshRenderer.sharedMaterials = new Material[] { currentTopMaterial, currentSideMaterial };
             }
 
+            originalBasePosition = transform.localPosition;
             restingLocalPosition = transform.localPosition;
             UpdateVisuals();
         }
@@ -143,6 +146,23 @@ namespace ElementalHexTactics3D.Grid
         {
             state = newState;
             tierLevel = newTier;
+
+            if (originalBasePosition == Vector3.zero && transform.localPosition != Vector3.zero)
+            {
+                originalBasePosition = transform.localPosition;
+            }
+
+            // Visually pop Stone Pillar up by 1 unit elevation
+            if (state == TileState.StonePillar)
+            {
+                restingLocalPosition = originalBasePosition + Vector3.up * 1.0f;
+                transform.localPosition = restingLocalPosition;
+            }
+            else
+            {
+                restingLocalPosition = originalBasePosition;
+                transform.localPosition = restingLocalPosition;
+            }
 
             if (HexGrid3D.Instance != null)
             {
@@ -186,6 +206,17 @@ namespace ElementalHexTactics3D.Grid
             Color tintColor = Color.white;
             Color emissionColor = Color.black;
 
+            if (state == TileState.Mud)
+            {
+                tintColor = new Color(0.42f, 0.28f, 0.16f, 1f); // Rich muddy clay brown
+                emissionColor = new Color(0.06f, 0.04f, 0.02f, 1f);
+            }
+            else if (state == TileState.StonePillar)
+            {
+                tintColor = new Color(0.62f, 0.64f, 0.68f, 1f); // Solid granite gray
+                emissionColor = new Color(0.12f, 0.12f, 0.14f, 1f);
+            }
+
             if (isSelected)
             {
                 tintColor = new Color(1.8f, 1.6f, 0.5f, 1f); // Golden tactical tint
@@ -200,7 +231,7 @@ namespace ElementalHexTactics3D.Grid
                 }
                 else
                 {
-                    tintColor = new Color(1.35f, 1.35f, 1.35f, 1f);
+                    tintColor = (state == TileState.Mud || state == TileState.StonePillar) ? tintColor * 1.35f : new Color(1.35f, 1.35f, 1.35f, 1f);
                     emissionColor = new Color(0.12f, 0.12f, 0.12f, 1f);
                 }
             }

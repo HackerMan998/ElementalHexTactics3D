@@ -79,8 +79,27 @@ namespace ElementalHexTactics3D.Units
         public int BonusAttackDamage { get; private set; } = 0;
         public int BonusMoveRange { get; private set; } = 0;
         public bool IsMagmaImmune { get; private set; } = false;
+
+        [Header("Mobility Debuffs")]
+        [SerializeField] private int immobilizeTurns = 0;
+        [SerializeField] private int crippleTurns = 0;
+
+        public int ImmobilizeTurns => immobilizeTurns;
+        public int CrippleTurns => crippleTurns;
+        public bool IsImmobilized => immobilizeTurns > 0;
+        public bool IsCrippled => crippleTurns > 0;
+
         public int EffectiveAttackDamage => baseAttackDamage + BonusAttackDamage;
-        public int EffectiveMoveRange => moveRange + BonusMoveRange;
+        public int EffectiveMoveRange
+        {
+            get
+            {
+                if (IsImmobilized) return 0;
+                int normal = moveRange + BonusMoveRange;
+                if (IsCrippled) return Mathf.Min(1, normal);
+                return normal;
+            }
+        }
 
         [Header("Land Consumption Economy")]
         [SerializeField] private int elementalCores = 0;
@@ -131,6 +150,33 @@ namespace ElementalHexTactics3D.Units
         {
             hasMovedThisTurn = false;
             hasActedThisTurn = false;
+            UpdateAttunement();
+            UpdateBaseRingVisuals();
+        }
+
+        public void ApplyMobilityDebuff(int immobilizeRounds, int crippleRounds)
+        {
+            immobilizeTurns = Mathf.Max(immobilizeTurns, immobilizeRounds);
+            crippleTurns = Mathf.Max(crippleTurns, crippleRounds);
+            UpdateAttunement();
+            UpdateBaseRingVisuals();
+        }
+
+        public void OnTurnEnd()
+        {
+            if (immobilizeTurns > 0)
+            {
+                immobilizeTurns--;
+                if (immobilizeTurns == 0 && crippleTurns > 0)
+                {
+                    CombatFeedbackManager.Instance?.SpawnDamageText(transform.position, "CRIPPLED (Move: 1)", new Color(1.0f, 0.7f, 0.2f), 1.3f);
+                }
+            }
+            else if (crippleTurns > 0)
+            {
+                crippleTurns--;
+            }
+
             UpdateAttunement();
             UpdateBaseRingVisuals();
         }
@@ -341,6 +387,20 @@ namespace ElementalHexTactics3D.Units
             {
                 CurrentAttunementName = "💨 Vapor Shroud (Mist Cover)";
             }
+            // 4. Mud: Sticky quagmire
+            else if (state == TileState.Mud)
+            {
+                CurrentAttunementName = "💩 Mud (Quagmire)";
+            }
+
+            if (IsImmobilized)
+            {
+                CurrentAttunementName += " | ⛓️ IMMOBILIZED";
+            }
+            else if (IsCrippled)
+            {
+                CurrentAttunementName += " | 🦶 CRIPPLED (Move 1)";
+            }
 
             UpdateBaseRingVisuals();
         }
@@ -358,6 +418,12 @@ namespace ElementalHexTactics3D.Units
                 {
                     baseRingRenderer.color = ExhaustedColor;
                     baseRing.transform.localScale = Vector3.one * 0.90f;
+                }
+                else if (IsImmobilized)
+                {
+                    // Entangled / Submerged / Mud trapped ring indicator
+                    baseRingRenderer.color = new Color(0.75f, 0.45f, 0.20f, 0.95f);
+                    baseRing.transform.localScale = Vector3.one * 0.95f;
                 }
                 else if (BonusAttackDamage > 0)
                 {
@@ -442,12 +508,13 @@ namespace ElementalHexTactics3D.Units
         }
 
         /// <summary>
-        /// Applies hazard burn/submersion damage if unit lands on a hazardous tile.
+        /// Applies hazard burn/submersion damage or mobility debuffs if unit lands on a hazardous tile.
         /// </summary>
         public void ResolveTileHazardOnLanding(HexTile3D tile)
         {
             if (tile == null || currentHealth <= 0) return;
 
+            // 1. Molten Magma Hazard
             if (tile.State == TileState.Magma && !IsMagmaImmune)
             {
                 Debug.Log($"<color=#FF3D00><b>[Hazard Burn!]</b></color> {unitName} stepped into molten Magma! Took 3 burn damage.");
@@ -455,12 +522,30 @@ namespace ElementalHexTactics3D.Units
                 TacticalCameraController.Instance?.Shake(0.32f, 0.35f);
                 SoundManager3D.Instance?.PlaySpellCast(isFire: true);
             }
+            // 2. Deep Water Submersion (Tier 2) -> Turn 1 Immobilize, Turn 2 Cripple
             else if (tile.State == TileState.Water && tile.TierLevel >= 2)
             {
-                Debug.Log($"<color=#0288D1><b>[Deep Water Submersion!]</b></color> {unitName} stepped into Deep Water! Took 2 hazard damage.");
-                TakeDamage(2, "🌊 DEEP WATER! -2");
-                TacticalCameraController.Instance?.Shake(0.2f, 0.25f);
-                SoundManager3D.Instance?.PlaySpellCast(isFire: false);
+                // Water-attuned units and colossal Titans are immune!
+                if (affinity != ElementalAffinity.Water && archetype != UnitArchetype.Titan)
+                {
+                    ApplyMobilityDebuff(1, 1);
+                    Debug.Log($"<color=#0288D1><b>[Deep Water Submerged!]</b></color> {unitName} plunged into Deep Water! Immobilized 1 round.");
+                    CombatFeedbackManager.Instance?.SpawnDamageText(transform.position, "🌊 SUBMERGED! (Immobilized)", new Color(0.2f, 0.8f, 1.0f), 1.5f);
+                    TacticalCameraController.Instance?.Shake(0.2f, 0.25f);
+                    SoundManager3D.Instance?.PlaySpellCast(isFire: false);
+                }
+            }
+            // 3. Mud Quagmire Trap -> Turn 1 Immobilize, Turn 2 Cripple
+            else if (tile.State == TileState.Mud)
+            {
+                // Titans are immune to mud traps!
+                if (archetype != UnitArchetype.Titan)
+                {
+                    ApplyMobilityDebuff(1, 1);
+                    Debug.Log($"<color=#8D6E63><b>[Mud Quagmire Trap!]</b></color> {unitName} caught in sticky Mud! Immobilized 1 round.");
+                    CombatFeedbackManager.Instance?.SpawnDamageText(transform.position, "💩 MUD TRAP! (Immobilized)", new Color(0.75f, 0.55f, 0.35f), 1.5f);
+                    TacticalCameraController.Instance?.Shake(0.18f, 0.20f);
+                }
             }
         }
 

@@ -7,12 +7,14 @@ namespace ElementalHexTactics3D.Grid
     /// </summary>
     public enum TileState
     {
-        Barren,    // Neutral dry earth (Tier 0)
-        Scorched,  // Fire Tier 1
-        Magma,     // Fire Tier 2
-        Water,     // Water (Tier 1 = Shallow, Tier 2 = Deep)
-        Steam,     // Vapor cloud (Fire + Water reaction)
-        Grass      // Nature base
+        Barren,      // Neutral dry earth (Tier 0)
+        Scorched,    // Fire Tier 1
+        Magma,       // Fire Tier 2
+        Water,       // Water (Tier 1 = Shallow, Tier 2 = Deep)
+        Steam,       // Vapor cloud (Fire + Water reaction)
+        Grass,       // Nature base
+        Mud,         // Earth + Water reaction / Earth Tier 1 (Sticky quagmire)
+        StonePillar  // Earth Tier 2 (Elevated stone obstacle)
     }
 
     /// <summary>
@@ -43,6 +45,12 @@ namespace ElementalHexTactics3D.Grid
 
                 case TileState.Grass:
                     return new Color(0.35f, 0.70f, 0.30f, 1f); // Lush vibrant green
+
+                case TileState.Mud:
+                    return new Color(0.38f, 0.26f, 0.16f, 1f); // Sticky deep quagmire brown
+
+                case TileState.StonePillar:
+                    return new Color(0.52f, 0.54f, 0.58f, 1f); // Solid granite gray
 
                 default:
                     return Color.white;

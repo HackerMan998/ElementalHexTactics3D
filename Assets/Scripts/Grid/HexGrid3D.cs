@@ -101,6 +101,9 @@ namespace ElementalHexTactics3D.Grid
                                        : (shallowWaterMaterial ?? barrenMaterial);
                 case TileState.Steam:
                     return steamMaterial ?? barrenMaterial;
+                case TileState.Mud:
+                case TileState.StonePillar:
+                    return barrenMaterial;
                 default:
                     return barrenMaterial;
             }

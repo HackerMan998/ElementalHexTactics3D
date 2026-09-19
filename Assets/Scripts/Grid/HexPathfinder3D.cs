@@ -137,10 +137,22 @@ namespace ElementalHexTactics3D.Grid
         {
             if (tile == null) return -1;
 
-            // Deep Water (Tier 2) is impassable to walking units
-            if (tile.State == TileState.Water && tile.TierLevel >= 2)
+            // Stone Pillar (Earth Tier 2) is a solid impassable obstacle
+            if (tile.State == TileState.StonePillar)
             {
                 return -1;
+            }
+
+            // Deep Water (Tier 2) is passable but hazardous (submersion mobility trap)
+            if (tile.State == TileState.Water && tile.TierLevel >= 2)
+            {
+                return 1;
+            }
+
+            // Mud (Earth Tier 1) is passable but hazardous (quagmire mobility trap)
+            if (tile.State == TileState.Mud)
+            {
+                return 1;
             }
 
             // Magma (Tier 2) is passable but dangerous (1 cost)

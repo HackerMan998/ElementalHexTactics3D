@@ -59,6 +59,16 @@ namespace ElementalHexTactics3D.Turn
             if (result != BattleResult.InProgress) return;
             if (currentPhase != TurnPhase.PlayerTurn) return;
 
+            // Faction turn end for all player units
+            TacticalUnit3D[] units = FindObjectsByType<TacticalUnit3D>(FindObjectsSortMode.None);
+            foreach (var u in units)
+            {
+                if (u != null && u.Faction == UnitFaction.Player)
+                {
+                    u.OnTurnEnd();
+                }
+            }
+
             currentPhase = TurnPhase.EnemyTurn;
             Debug.Log($"<color=#EF5350><b>[Enemy Turn]</b></color> Round {currentRound} - Dracomancer is preparing to act...");
             OnTurnChanged?.Invoke(currentPhase);
@@ -86,7 +96,7 @@ namespace ElementalHexTactics3D.Turn
 
             OnTurnChanged?.Invoke(currentPhase);
 
-            // Resolve Environmental Hazards for Player units standing in Magma / Deep Water
+            // Resolve Environmental Hazards for Player units standing in Magma / Deep Water / Mud
             StartCoroutine(ResolveFactionHazards(UnitFaction.Player));
         }
 
@@ -114,11 +124,32 @@ namespace ElementalHexTactics3D.Turn
                 }
                 else if (tile != null && tile.State == TileState.Water && tile.TierLevel >= 2)
                 {
-                    Debug.Log($"<color=#0288D1><b>[Turn Hazard]</b></color> {u.UnitName} is submerged in Deep Water! Took 2 hazard damage.");
-                    u.TakeDamage(2, "🌊 DEEP WATER! -2");
-                    TacticalCameraController.Instance?.Shake(0.2f, 0.25f);
-                    SoundManager3D.Instance?.PlaySpellCast(isFire: false);
-                    yield return new WaitForSeconds(0.35f);
+                    if (u.Affinity != ElementalAffinity.Water && u.Archetype != UnitArchetype.Titan)
+                    {
+                        if (!u.IsImmobilized && !u.IsCrippled)
+                        {
+                            u.ApplyMobilityDebuff(1, 1);
+                            Debug.Log($"<color=#0288D1><b>[Turn Hazard]</b></color> {u.UnitName} is submerged in Deep Water! Immobilized 1 turn.");
+                            CombatFeedbackManager.Instance?.SpawnDamageText(u.transform.position, "🌊 SUBMERGED! (Immobilized)", new Color(0.2f, 0.8f, 1.0f), 1.5f);
+                            TacticalCameraController.Instance?.Shake(0.2f, 0.25f);
+                            SoundManager3D.Instance?.PlaySpellCast(isFire: false);
+                            yield return new WaitForSeconds(0.35f);
+                        }
+                    }
+                }
+                else if (tile != null && tile.State == TileState.Mud)
+                {
+                    if (u.Archetype != UnitArchetype.Titan)
+                    {
+                        if (!u.IsImmobilized && !u.IsCrippled)
+                        {
+                            u.ApplyMobilityDebuff(1, 1);
+                            Debug.Log($"<color=#8D6E63><b>[Turn Hazard]</b></color> {u.UnitName} is stuck in Mud! Immobilized 1 turn.");
+                            CombatFeedbackManager.Instance?.SpawnDamageText(u.transform.position, "💩 MUD TRAP! (Immobilized)", new Color(0.75f, 0.55f, 0.35f), 1.5f);
+                            TacticalCameraController.Instance?.Shake(0.18f, 0.20f);
+                            yield return new WaitForSeconds(0.35f);
+                        }
+                    }
                 }
             }
             CheckBattleConditions();
@@ -196,6 +227,7 @@ namespace ElementalHexTactics3D.Turn
             foreach (var enemy in enemies)
             {
                 if (enemy == null || enemy.CurrentHealth <= 0) continue;
+                enemy.ResetTurnActions();
 
                 // Re-evaluate living players
                 players.RemoveAll(p => p == null || p.CurrentHealth <= 0);
@@ -209,6 +241,15 @@ namespace ElementalHexTactics3D.Turn
 
                 CheckBattleConditions();
                 if (result != BattleResult.InProgress) yield break;
+            }
+
+            // Faction turn end for all enemies
+            foreach (var e in enemies)
+            {
+                if (e != null && e.CurrentHealth > 0)
+                {
+                    e.OnTurnEnd();
+                }
             }
 
             CheckBattleConditions();

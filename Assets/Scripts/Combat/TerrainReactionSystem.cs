@@ -85,26 +85,46 @@ namespace ElementalHexTactics3D.Combat
                         result.Description = "Earth is charred into Scorched Earth (Tier 1)!";
                         return result;
                     }
+
+                    // 4. Mud + Fire -> Bakes into Scorched Earth!
+                    if (currentState == TileState.Mud)
+                    {
+                        result.ResultingState = TileState.Scorched;
+                        result.ResultingTier = 1;
+                        result.ReactionName = "Baked Mud";
+                        result.TriggeredReaction = true;
+                        result.Description = "Intense heat baked the wet mud into dry scorched ground!";
+                        return result;
+                    }
                     break;
 
                 case ElementType.Water:
                     // 1. OPPOSE Check: Water on Magma / Scorched -> Quench & Cool!
                     if (currentState == TileState.Magma)
                     {
-                        result.ResultingState = TileState.Barren;
-                        result.ResultingTier = 0;
-                        result.ReactionName = "Quench & Solidify";
+                        result.ResultingState = TileState.Scorched;
+                        result.ResultingTier = 1;
+                        result.ReactionName = "Steam Cataclysm & Magma Cool";
                         result.TriggeredReaction = true;
-                        result.Description = "Molten magma quenched with explosive steam into solid barren rock!";
+                        result.Description = "Molten magma cooled to Scorched Earth, violently erupting steam across 3 surrounding hexes!";
                         return result;
                     }
                     if (currentState == TileState.Scorched)
                     {
-                        result.ResultingState = TileState.Barren;
-                        result.ResultingTier = 0;
-                        result.ReactionName = "Ash Extinguished";
+                        result.ResultingState = TileState.Steam;
+                        result.ResultingTier = 1;
+                        result.ReactionName = "Steam Eruption";
                         result.TriggeredReaction = true;
-                        result.Description = "Water washed the scorching ash into cool earth.";
+                        result.Description = "Scorched earth quenched into a scalding Steam Cloud!";
+                        return result;
+                    }
+                    if (currentState == TileState.Mud)
+                    {
+                        result.ResultingState = TileState.Water;
+                        result.ResultingTier = 1;
+                        result.ReactionName = "Flooded Mud";
+                        result.TriggeredReaction = true;
+                        result.Description = "Mud flooded into Shallow Water.";
                         return result;
                     }
 
@@ -130,6 +150,52 @@ namespace ElementalHexTactics3D.Combat
                         return result;
                     }
                     break;
+
+                case ElementType.Earth:
+                    // 1. Water + Earth -> MUD TRAP!
+                    if (currentState == TileState.Water)
+                    {
+                        result.ResultingState = TileState.Mud;
+                        result.ResultingTier = 1;
+                        result.ReactionName = "Quagmire Mud Trap";
+                        result.TriggeredReaction = true;
+                        result.Description = "Earth collapsed into water, creating a sticky Mud trap!";
+                        return result;
+                    }
+
+                    // 2. Fire + Earth -> Smother & cool
+                    if (currentState == TileState.Scorched || currentState == TileState.Magma)
+                    {
+                        result.ResultingState = TileState.Barren;
+                        result.ResultingTier = 0;
+                        result.ReactionName = "Earth Smother";
+                        result.TriggeredReaction = true;
+                        result.Description = "Earth smothered the fiery embers into solid ground.";
+                        return result;
+                    }
+
+                    // 3. Mud + Earth -> Fills mud back to solid dry ground
+                    if (currentState == TileState.Mud)
+                    {
+                        result.ResultingState = TileState.Barren;
+                        result.ResultingTier = 0;
+                        result.ReactionName = "Earth Fill";
+                        result.TriggeredReaction = true;
+                        result.Description = "Solid earth filled the mud quagmire into stable ground.";
+                        return result;
+                    }
+
+                    // 4. Neutral + Earth -> STONE PILLAR OBSTACLE!
+                    if (currentState == TileState.Barren || currentState == TileState.Grass || currentState == TileState.Steam)
+                    {
+                        result.ResultingState = TileState.StonePillar;
+                        result.ResultingTier = 2;
+                        result.ReactionName = "Earth Spire";
+                        result.TriggeredReaction = true;
+                        result.Description = "Erected a solid Stone Pillar obstacle for Wall-Slam setups!";
+                        return result;
+                    }
+                    break;
             }
 
             return result;
@@ -144,9 +210,54 @@ namespace ElementalHexTactics3D.Combat
         {
             if (tile == null) return default;
 
+            TileState prevState = tile.State;
+
             // 1. Evaluate and apply terrain reaction
             TerrainReactionResult reaction = PredictReaction(tile.State, tile.TierLevel, spell);
             tile.SetState(reaction.ResultingState, reaction.ResultingTier);
+
+            // Special: Water on Magma -> 3-hex random adjacent Steam Eruption!
+            if (spell == ElementType.Water && prevState == TileState.Magma && HexGrid3D.Instance != null)
+            {
+                System.Collections.Generic.List<HexTile3D> neighbors = HexGrid3D.Instance.GetNeighbors(tile.Coordinates);
+                System.Collections.Generic.List<HexTile3D> eligible = new System.Collections.Generic.List<HexTile3D>();
+                foreach (var n in neighbors)
+                {
+                    if (n != null && n.State != TileState.Magma && n.State != TileState.Steam)
+                    {
+                        eligible.Add(n);
+                    }
+                }
+                if (eligible.Count < 3)
+                {
+                    foreach (var n in neighbors)
+                    {
+                        if (n != null && !eligible.Contains(n) && n.State != TileState.Magma)
+                        {
+                            eligible.Add(n);
+                        }
+                    }
+                }
+
+                // Random shuffle
+                for (int i = 0; i < eligible.Count; i++)
+                {
+                    int rnd = Random.Range(i, eligible.Count);
+                    var temp = eligible[i];
+                    eligible[i] = eligible[rnd];
+                    eligible[rnd] = temp;
+                }
+
+                int count = Mathf.Min(3, eligible.Count);
+                for (int i = 0; i < count; i++)
+                {
+                    HexTile3D steamNeighbor = eligible[i];
+                    steamNeighbor.SetState(TileState.Steam, 1);
+                    CombatVFXManager.Instance?.PlaySteamCloud(steamNeighbor.GetTopCenterPosition());
+                }
+
+                Debug.Log($"<color=#00E5FF><b>[Steam Cataclysm]</b></color> Magma at {tile.Coordinates} quenched, erupting steam across {count} adjacent hexes!");
+            }
 
             // Trigger elemental reaction VFX
             if (reaction.ResultingState == TileState.Steam)
@@ -161,13 +272,17 @@ namespace ElementalHexTactics3D.Combat
             {
                 CombatVFXManager.Instance?.PlayWaterSplash(tile.GetTopCenterPosition());
             }
+            else if (spell == ElementType.Earth)
+            {
+                CombatVFXManager.Instance?.PlayWallSlam(tile.GetTopCenterPosition(), Vector3.up);
+            }
 
             // 2. Damage unit occupying the tile & refresh attunement
             TacticalUnit3D occupant = tile.CurrentOccupant as TacticalUnit3D;
             if (occupant != null)
             {
                 occupant.UpdateAttunement();
-                string spellTag = (spell == ElementType.Fire) ? "🔥 FIREBALL!" : "💧 WATER!";
+                string spellTag = (spell == ElementType.Fire) ? "🔥 FIREBALL!" : (spell == ElementType.Water ? "💧 WATER!" : "⛰️ EARTH SPIRE!");
                 occupant.TakeDamage(damage, $"{spellTag} -{damage}");
                 Debug.Log($"<color=#FF5252><b>[Direct Hit!]</b></color> {spell} dealt <b>{damage}</b> damage to <b>{occupant.UnitName}</b>!");
             }

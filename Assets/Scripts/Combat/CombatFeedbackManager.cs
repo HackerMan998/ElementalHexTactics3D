@@ -212,10 +212,15 @@ namespace ElementalHexTactics3D.Combat
             if (bannerTimer <= 0f) return;
 
             float alpha = Mathf.Clamp01(bannerTimer / 0.3f);
-            float bannerW = 460f;
-            float bannerH = 68f;
-            float x = (Screen.width - bannerW) * 0.5f;
-            float y = 28f;
+            float bannerW = 440f;
+            float bannerH = 64f;
+
+            // Ensure banner is horizontally centered on wide displays,
+            // but pushed safely to the right of the top-left HUD panel (width 400 + 16 margin) on compact displays!
+            float centerX = (Screen.width - bannerW) * 0.5f;
+            float minX = 430f;
+            float x = (Screen.width > minX + bannerW + 20f) ? Mathf.Max(minX, centerX) : centerX;
+            float y = 18f;
 
             Rect bannerRect = new Rect(x, y, bannerW, bannerH);
 
