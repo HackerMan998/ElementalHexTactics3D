@@ -20,18 +20,18 @@ In **Elemental Hex Tactics 3D**, battles feature a focused **2v2 skirmish** desi
 ```mermaid
 flowchart LR
     subgraph CommanderActions["Commander Actions"]
-        F["🔥 Fireball\n(Range 3, Dmg 3)"]
-        W["💧 Water Surge\n(Range 3, Dmg 2)"]
-        E["⛰️ Earth Spire\n(Range 3, Dmg 2 / Wall / Mud)"]
-        P["💨 Push\n(Range 1, Shove 1)"]
-        S["⚡ Siphon Land\n(+1 Elemental Core)"]
+        F["Fireball<br/>Range 3, Dmg 3"]
+        W["Water Surge<br/>Range 3, Dmg 2"]
+        E["Earth Spire<br/>Range 3, Dmg 2"]
+        P["Push<br/>Range 1, Shove 1"]
+        S["Siphon Land<br/>Gain 1 Core"]
     end
 
     subgraph TitanActions["Titan Actions"]
-        TS["⚔️ Titan Strike\n(Range 1, Dmg 4)"]
-        TSH["💨 Tail Shove\n(Range 1, Shove 1)"]
-        TSIP["⚡ Siphon Land\n(+1 Elemental Core)"]
-        CAT["🌋 Magma Cataclysm\n(Radius 1, Dmg 8, Req 1 Core)"]
+        TS["Titan Strike<br/>Range 1, Dmg 4"]
+        TSH["Tail Shove<br/>Range 1, Shove 1"]
+        TSIP["Siphon Land<br/>Gain 1 Core"]
+        CAT["Magma Cataclysm<br/>Radius 1, Dmg 8"]
     end
 ```
 

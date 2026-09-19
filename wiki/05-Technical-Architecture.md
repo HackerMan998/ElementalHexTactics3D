@@ -7,26 +7,26 @@
 ## 🏛️ System Architecture Overview
 
 ```mermaid
-graph TD
-    subgraph GridLayer["Hex Grid & Spatial Layer"]
-        HC["HexCoordinates.cs\n(Axial & Cube Coordinate Math)"]
-        HMB["HexMeshBuilder.cs\n(Procedural 3D Hex Pillar Geometry)"]
-        H3D["HexGrid3D.cs\n(Plateau Generator & Elevation Map)"]
-        HT["HexTile3D.cs\n(MaterialPropertyBlock & State Machine)"]
-        HP["HexPathfinder3D.cs\n(A* Pathfinding & Reachable Frontiers)"]
+flowchart TD
+    subgraph GridLayer["Hex Grid and Spatial Layer"]
+        HC["HexCoordinates.cs<br/>Axial and Cube Coordinate Math"]
+        HMB["HexMeshBuilder.cs<br/>Procedural 3D Hex Pillar Geometry"]
+        H3D["HexGrid3D.cs<br/>Plateau Generator and Elevation Map"]
+        HT["HexTile3D.cs<br/>MaterialPropertyBlock and State Machine"]
+        HP["HexPathfinder3D.cs<br/>A* Pathfinding and Reachable Frontiers"]
     end
 
-    subgraph CombatLayer["Combat & Elemental Chemistry"]
-        TRS["TerrainReactionSystem.cs\n(Elemental State Evolution Matrix)"]
-        PM["PushMechanic3D.cs\n(Kinetic Vectors & Wall Slam Physics)"]
-        VFX["CombatVFXManager.cs\n(Procedural Particle Shuriken Engine)"]
-        CFM["CombatFeedbackManager.cs\n(Overhead Bars, Texts, Shockwaves)"]
+    subgraph CombatLayer["Combat and Elemental Chemistry"]
+        TRS["TerrainReactionSystem.cs<br/>Elemental State Evolution Matrix"]
+        PM["PushMechanic3D.cs<br/>Kinetic Vectors and Wall Slam Physics"]
+        VFX["CombatVFXManager.cs<br/>Procedural Particle Shuriken Engine"]
+        CFM["CombatFeedbackManager.cs<br/>Overhead Bars, Texts, Shockwaves"]
     end
 
-    subgraph ControlLayer["Camera & Interaction Layer"]
-        CAM["TacticalCameraController.cs\n(WASD Pan, Q/E 60° Snap, Shake)"]
-        HGI["HexGridInteraction3D.cs\n(Raycasting, Ghost UI, Action Bar)"]
-        TM["TurnManager3D.cs\n(Round Cycle & AI Coordination)"]
+    subgraph ControlLayer["Camera and Interaction Layer"]
+        CAM["TacticalCameraController.cs<br/>WASD Pan, Q/E 60 Snap, Shake"]
+        HGI["HexGridInteraction3D.cs<br/>Raycasting, Ghost UI, Action Bar"]
+        TM["TurnManager3D.cs<br/>Round Cycle and AI Coordination"]
     end
 
     GridLayer --> CombatLayer

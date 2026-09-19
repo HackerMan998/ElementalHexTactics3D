@@ -7,14 +7,14 @@ The battlefield in **Elemental Hex Tactics 3D** is living matter. Every hex tile
 ## 🌋 The Core Triad: Fire, Water, Earth
 
 ```mermaid
-graph TD
-    Fire["🔥 Fire\n(Damage & Magma)"]
-    Water["💧 Water\n(Flooding & Smokescreen)"]
-    Earth["⛰️ Earth\n(Walls & Quagmires)"]
+flowchart TD
+    Fire["Fire<br/>Damage and Magma"]
+    Water["Water<br/>Flooding and Steam"]
+    Earth["Earth<br/>Walls and Quagmires"]
 
-    Fire <-->|Oppose: Steam Cloud\nMagma Quench: 3-Hex Steam Eruption| Water
-    Water <-->|Infuse: Mud Quagmire\n(Mobility Trap)| Earth
-    Earth <-->|Smother: Cools Magma\nBake: Mud dries to Scorched| Fire
+    Fire <-->|"Steam Cloud and Eruption"| Water
+    Water <-->|"Mud Quagmire Trap"| Earth
+    Earth <-->|"Smother and Baked Mud"| Fire
 ```
 
 ---

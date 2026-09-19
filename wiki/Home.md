@@ -5,13 +5,21 @@ Welcome to the official developer and player wiki for **Elemental Hex Tactics 3D
 This game is a **2.5D HD-2D Tactical Turn-Based Strategy RPG** built from scratch in **Unity 6 (URP)**. It bridges the tactical emergent depth of *Divinity: Original Sin* with the spatial puzzle physics of *Into the Breach*, presented in a modern *Triangle Strategy* / *Octopath Traveler* diorama aesthetic.
 
 ```mermaid
-graph TD
-    A["⚔️ Elemental Hex Tactics 3D"] --> B["🌋 Reactive Elemental Terrain\n(Fire, Water, Earth)"]
-    A --> C["💨 Kinetic Physics & Shoves\n(Wall-Slams, Collisions, Cliffs)"]
-    A --> D["⛓️ Status Denial Mobility Traps\n(Deep Water & Mud: Immobilize/Cripple)"]
-    A --> E["🧙 FFT Attunement System\n(Terrain buffs & Core Harvesting)"]
-    A --> F["🎨 HD-2D Diorama Engine\n(Tilt-Shift DoF, Procedural Particle VFX)"]
+flowchart TD
+    A["Elemental Hex Tactics 3D"] --> B["Reactive Elemental Terrain<br/>Fire, Water, Earth"]
+    A --> C["Kinetic Physics and Shoves<br/>Wall-Slams and Collisions"]
+    A --> D["Status Denial Mobility Traps<br/>Deep Water and Mud"]
+    A --> E["FFT Attunement System<br/>Terrain buffs and Core Harvesting"]
+    A --> F["HD-2D Diorama Engine<br/>Tilt-Shift DoF and Particle VFX"]
 ```
+
+---
+
+## 📸 In-Game Screenshots
+
+| 💥 Magma Cataclysm & Particle VFX | 🛡️ Tactical Action & Combat Grid |
+| :---: | :---: |
+| ![Cataclysm VFX](https://raw.githubusercontent.com/NealversePrime/ElementalHexTactics3D/main/docs/gameplay_cataclysm_vfx.png) | ![Tactical Combat](https://raw.githubusercontent.com/NealversePrime/ElementalHexTactics3D/main/docs/gameplay_action.png) |
 
 ---
 
@@ -19,11 +27,11 @@ graph TD
 
 | Page | Description |
 | :--- | :--- |
-| [**01. Overview & Tactical Controls**](01-Overview-and-Controls.md) | Game concept, 3D tactical camera controls, turn economy, and action bar interface. |
-| [**02. Elemental Reaction Matrix**](02-Elemental-Reaction-Matrix.md) | Full interaction matrix for **Fire, Water, and Earth**, 3-Hex Steam Eruptions, and Quagmires. |
-| [**03. Kinetic Combat & Hazards**](03-Kinetic-Combat-and-Hazards.md) | Shove physics, Wall-Slam collisions, environmental hazards, and mobility debuffs. |
-| [**04. Units & Attunement**](04-Units-and-Attunement.md) | Unit stats, archetypes (Commander vs Titan vs Minion), abilities, and FFT Attunement buffs. |
-| [**05. Technical Architecture**](05-Technical-Architecture.md) | Unity 6 URP architecture, procedural 3D hex meshes, procedural particle VFX engine, and zero-asset design. |
+| [**01. Overview & Tactical Controls**](01-Overview-and-Controls) | Game concept, 3D tactical camera controls, turn economy, and action bar interface. |
+| [**02. Elemental Reaction Matrix**](02-Elemental-Reaction-Matrix) | Full interaction matrix for **Fire, Water, and Earth**, 3-Hex Steam Eruptions, and Quagmires. |
+| [**03. Kinetic Combat & Hazards**](03-Kinetic-Combat-and-Hazards) | Shove physics, Wall-Slam collisions, environmental hazards, and mobility debuffs. |
+| [**04. Units & Attunement**](04-Units-and-Attunement) | Unit stats, archetypes (Commander vs Titan vs Minion), abilities, and FFT Attunement buffs. |
+| [**05. Technical Architecture**](05-Technical-Architecture) | Unity 6 URP architecture, procedural 3D hex meshes, procedural particle VFX engine, and zero-asset design. |
 
 ---
 

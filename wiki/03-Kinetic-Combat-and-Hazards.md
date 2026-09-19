@@ -10,16 +10,16 @@ Kinetic push attacks are executed via [`PushMechanic3D.cs`](../Assets/Scripts/Co
 
 ```mermaid
 flowchart TD
-    Caster["Caster\n(Commander / Titan)"] -->|Executes Push / Tail Shove| Target["Target Enemy\n(Takes 1 Base Push Dmg)"]
-    Target --> Check["Evaluate Destination Hex\n(Target + Directional Vector)"]
+    Caster["Caster<br/>Commander or Titan"] -->|"Executes Push or Shove"| Target["Target Enemy<br/>Takes 1 Push Dmg"]
+    Target --> Check["Evaluate Destination Hex<br/>Target plus Direction Vector"]
     
-    Check -->|Blocked by Cliff / Unit / Stone Pillar| WallSlam["💥 WALL SLAM!\n(Target stops & takes 2 Collision Dmg)"]
-    Check -->|Valid & Open Hex| Displace["Smooth Elevation Leap\n(Unit hops to destination tile)"]
+    Check -->|"Blocked by Cliff, Unit, or Pillar"| WallSlam["WALL SLAM!<br/>Takes 2 Collision Dmg"]
+    Check -->|"Valid and Open Hex"| Displace["Smooth Elevation Leap<br/>Hops to destination tile"]
     
     Displace --> HazardCheck["Check Destination Terrain"]
-    HazardCheck -->|Molten Magma| Burn["🔥 MAGMA BURN! -3 Dmg\n(Fiery Burst VFX)"]
-    HazardCheck -->|Deep Water (Tier 2)| Submerge["🌊 SUBMERGED!\n(Immobilized 1 Turn + Crippled 1 Turn)"]
-    HazardCheck -->|Mud Quagmire| MudTrap["💩 MUD TRAP!\n(Immobilized 1 Turn + Crippled 1 Turn)"]
+    HazardCheck -->|"Molten Magma"| Burn["MAGMA BURN!<br/>Takes 3 Fire Dmg"]
+    HazardCheck -->|"Deep Water"| Submerge["SUBMERGED!<br/>Immobilized 1 Turn then Crippled"]
+    HazardCheck -->|"Mud Quagmire"| MudTrap["MUD TRAP!<br/>Immobilized 1 Turn then Crippled"]
 ```
 
 ### Directional Calculation:

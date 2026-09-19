@@ -17,10 +17,10 @@ The camera system is managed by [`TacticalCameraController.cs`](../Assets/Script
 
 ```mermaid
 flowchart LR
-    A["Camera Controls"] --> B["W / A / S / D\n(Smooth Isometric Panning)"]
-    A --> C["Q / E\n(Cinematic 60° Hexagonal Rotation)"]
-    A --> D["Mouse Wheel\n(Zoom In / Out: 5m to 25m)"]
-    A --> E["Impact Feedback\n(Procedural Camera Shake)"]
+    A["Camera Controls"] --> B["W / A / S / D<br/>Isometric Panning"]
+    A --> C["Q / E<br/>60° Hexagonal Rotation"]
+    A --> D["Mouse Wheel<br/>Zoom In and Out"]
+    A --> E["Impact Feedback<br/>Camera Shake"]
 ```
 
 ### Key Bindings:
