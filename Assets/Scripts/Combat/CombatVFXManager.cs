@@ -150,6 +150,15 @@ namespace ElementalHexTactics3D.Combat
             if (cloudMaterial.HasProperty("_Blend")) cloudMaterial.SetFloat("_Blend", 0f); // Alpha blend
         }
 
+        private ParticleSystem CreateParticleSystem(GameObject target)
+        {
+            ParticleSystem ps = target.AddComponent<ParticleSystem>();
+            ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            var main = ps.main;
+            main.playOnAwake = false;
+            return ps;
+        }
+
         /// <summary>
         /// Plays impact sparks and debris when a unit takes damage.
         /// </summary>
@@ -159,7 +168,7 @@ namespace ElementalHexTactics3D.Combat
             GameObject vfxObj = new GameObject("VFX_HitSparks");
             vfxObj.transform.position = worldPos;
 
-            ParticleSystem ps = vfxObj.AddComponent<ParticleSystem>();
+            ParticleSystem ps = CreateParticleSystem(vfxObj);
             ParticleSystemRenderer psRenderer = vfxObj.GetComponent<ParticleSystemRenderer>();
             psRenderer.material = sparkMaterial;
             psRenderer.renderMode = ParticleSystemRenderMode.Billboard;
@@ -203,7 +212,7 @@ namespace ElementalHexTactics3D.Combat
             vfxObj.transform.position = worldPos;
 
             // 1. Rock Chips / Debris burst
-            ParticleSystem psDebris = vfxObj.AddComponent<ParticleSystem>();
+            ParticleSystem psDebris = CreateParticleSystem(vfxObj);
             ParticleSystemRenderer rDebris = vfxObj.GetComponent<ParticleSystemRenderer>();
             rDebris.material = sparkMaterial;
 
@@ -241,7 +250,7 @@ namespace ElementalHexTactics3D.Combat
             GameObject dustObj = new GameObject("DustPuff");
             dustObj.transform.SetParent(vfxObj.transform, false);
 
-            ParticleSystem psDust = dustObj.AddComponent<ParticleSystem>();
+            ParticleSystem psDust = CreateParticleSystem(dustObj);
             ParticleSystemRenderer rDust = dustObj.GetComponent<ParticleSystemRenderer>();
             rDust.material = cloudMaterial;
 
@@ -282,7 +291,7 @@ namespace ElementalHexTactics3D.Combat
             GameObject vfxObj = new GameObject("VFX_FireBurst");
             vfxObj.transform.position = worldPos + Vector3.up * 0.2f;
 
-            ParticleSystem ps = vfxObj.AddComponent<ParticleSystem>();
+            ParticleSystem ps = CreateParticleSystem(vfxObj);
             ParticleSystemRenderer r = vfxObj.GetComponent<ParticleSystemRenderer>();
             r.material = glowMaterial;
 
@@ -323,7 +332,7 @@ namespace ElementalHexTactics3D.Combat
             GameObject vfxObj = new GameObject("VFX_WaterSplash");
             vfxObj.transform.position = worldPos + Vector3.up * 0.1f;
 
-            ParticleSystem ps = vfxObj.AddComponent<ParticleSystem>();
+            ParticleSystem ps = CreateParticleSystem(vfxObj);
             ParticleSystemRenderer r = vfxObj.GetComponent<ParticleSystemRenderer>();
             r.material = glowMaterial;
 
@@ -366,7 +375,7 @@ namespace ElementalHexTactics3D.Combat
             GameObject vfxObj = new GameObject("VFX_SteamCloud");
             vfxObj.transform.position = worldPos + Vector3.up * 0.2f;
 
-            ParticleSystem ps = vfxObj.AddComponent<ParticleSystem>();
+            ParticleSystem ps = CreateParticleSystem(vfxObj);
             ParticleSystemRenderer r = vfxObj.GetComponent<ParticleSystemRenderer>();
             r.material = cloudMaterial;
 
@@ -408,7 +417,7 @@ namespace ElementalHexTactics3D.Combat
             embersObj.transform.SetParent(tileParent, false);
             embersObj.transform.localPosition = new Vector3(0f, 0.08f, 0f);
 
-            ParticleSystem ps = embersObj.AddComponent<ParticleSystem>();
+            ParticleSystem ps = CreateParticleSystem(embersObj);
             ParticleSystemRenderer r = embersObj.GetComponent<ParticleSystemRenderer>();
             r.material = glowMaterial;
 
