@@ -82,7 +82,10 @@ namespace ElementalHexTactics3D.InputHandling
                 if (mainCamera == null) return;
             }
 
-            if (TitleMenuManager3D.Instance != null && (!TitleMenuManager3D.Instance.IsInGame || TitleMenuManager3D.Instance.IsPaused))
+            bool isMenuBlocking = (TitleMenuCanvasUI.Instance != null && (!TitleMenuCanvasUI.Instance.IsInGame || TitleMenuCanvasUI.Instance.IsPaused)) ||
+                                  (TitleMenuManager3D.Instance != null && (!TitleMenuManager3D.Instance.IsInGame || TitleMenuManager3D.Instance.IsPaused));
+
+            if (isMenuBlocking)
             {
                 if (currentHoveredTile != null)
                 {
@@ -769,7 +772,10 @@ namespace ElementalHexTactics3D.InputHandling
 
             EnsureSolidTexture();
 
-            if (TitleMenuManager3D.Instance != null && (!TitleMenuManager3D.Instance.IsInGame || TitleMenuManager3D.Instance.IsPaused))
+            bool isMenuBlocking = (TitleMenuCanvasUI.Instance != null && (!TitleMenuCanvasUI.Instance.IsInGame || TitleMenuCanvasUI.Instance.IsPaused)) ||
+                                  (TitleMenuManager3D.Instance != null && (!TitleMenuManager3D.Instance.IsInGame || TitleMenuManager3D.Instance.IsPaused));
+
+            if (isMenuBlocking)
             {
                 return; // Suppress standard combat HUD when Title/Options/Pause menu is active
             }

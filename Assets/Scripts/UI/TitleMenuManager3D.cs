@@ -99,6 +99,8 @@ namespace ElementalHexTactics3D.UI
 
         private void Update()
         {
+            if (TitleMenuCanvasUI.Instance != null) return; // Yield to modern 2D Canvas UI
+
             // Title screen camera orbit
             if (currentState == TitleMenuState.TitleScreen && autoOrbitCameraOnTitle)
             {
@@ -228,6 +230,9 @@ namespace ElementalHexTactics3D.UI
 
         private void OnGUI()
         {
+            // If modern 2D Canvas UI is present, completely suppress legacy IMGUI
+            if (TitleMenuCanvasUI.Instance != null) return;
+
             if (!Application.isPlaying) return;
             EnsureTextures();
 

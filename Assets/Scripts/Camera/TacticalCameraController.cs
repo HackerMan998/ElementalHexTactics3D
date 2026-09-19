@@ -88,15 +88,19 @@ namespace ElementalHexTactics3D.CameraControl
         private void HandleRotationInput()
         {
             // If on Title Screen, gently auto-orbit the diorama for a stunning anime background!
-            if (ElementalHexTactics3D.UI.TitleMenuManager3D.Instance != null &&
-                ElementalHexTactics3D.UI.TitleMenuManager3D.Instance.IsOnTitleScreen)
+            bool isOnTitle = (ElementalHexTactics3D.UI.TitleMenuCanvasUI.Instance != null && ElementalHexTactics3D.UI.TitleMenuCanvasUI.Instance.IsOnTitleScreen) ||
+                             (ElementalHexTactics3D.UI.TitleMenuManager3D.Instance != null && ElementalHexTactics3D.UI.TitleMenuManager3D.Instance.IsOnTitleScreen);
+
+            if (isOnTitle)
             {
                 targetYaw += 9f * Time.deltaTime;
                 return;
             }
 
-            if (ElementalHexTactics3D.UI.TitleMenuManager3D.Instance != null &&
-                ElementalHexTactics3D.UI.TitleMenuManager3D.Instance.IsPaused)
+            bool isPaused = (ElementalHexTactics3D.UI.TitleMenuCanvasUI.Instance != null && ElementalHexTactics3D.UI.TitleMenuCanvasUI.Instance.IsPaused) ||
+                            (ElementalHexTactics3D.UI.TitleMenuManager3D.Instance != null && ElementalHexTactics3D.UI.TitleMenuManager3D.Instance.IsPaused);
+
+            if (isPaused)
             {
                 return;
             }

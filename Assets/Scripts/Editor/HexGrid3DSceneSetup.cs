@@ -93,6 +93,9 @@ namespace ElementalHexTactics3D.Editor
                 GameObject menuObj = new GameObject("TitleMenuManager3D");
                 menuObj.AddComponent<ElementalHexTactics3D.UI.TitleMenuManager3D>();
             }
+
+            // Automatically build the 2D Title Canvas with custom generated fantasy RPG UI assets
+            TitleMenuCanvasBuilder.GenerateTitleCanvas();
         }
 
         private static void SetupSoundManager()
