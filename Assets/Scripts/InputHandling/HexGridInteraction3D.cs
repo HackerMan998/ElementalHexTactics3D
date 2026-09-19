@@ -247,8 +247,8 @@ namespace ElementalHexTactics3D.InputHandling
             currentSelectedUnit = unit;
             currentSelectedUnit.SetSelected(true);
 
-            // If player unit, default to Move mode
-            if (unit.Faction == UnitFaction.Player)
+            // If player unit and can move, default to Move mode
+            if (unit.Faction == UnitFaction.Player && !unit.HasMovedThisTurn && unit.EffectiveMoveRange > 0)
             {
                 SetActionMode(UnitActionMode.Move);
             }
@@ -268,6 +268,18 @@ namespace ElementalHexTactics3D.InputHandling
             switch (mode)
             {
                 case UnitActionMode.Move:
+                    if (currentSelectedUnit.HasMovedThisTurn)
+                    {
+                        Debug.Log($"[Move Mode] {currentSelectedUnit.UnitName} has already moved this turn.");
+                        break;
+                    }
+
+                    if (currentSelectedUnit.IsImmobilized || currentSelectedUnit.EffectiveMoveRange <= 0)
+                    {
+                        Debug.Log($"<color=#FF7043><b>[Move Mode]</b></color> {currentSelectedUnit.UnitName} is immobilized and cannot move!");
+                        break;
+                    }
+
                     HexTile3D startTile = currentSelectedUnit.CurrentTile;
                     if (startTile == null)
                     {
@@ -277,8 +289,9 @@ namespace ElementalHexTactics3D.InputHandling
 
                     if (startTile != null)
                     {
-                        var reachable = HexPathfinder3D.GetReachableTiles(HexGrid3D.Instance, startTile, currentSelectedUnit.MoveRange);
-                        Debug.Log($"<color=#00E5FF><b>[Move Mode]</b></color> Unit: {currentSelectedUnit.UnitName} at {startTile.Coordinates}, Range: {currentSelectedUnit.MoveRange}, Found {reachable.Count} reachable tiles.");
+                        int effectiveRange = currentSelectedUnit.EffectiveMoveRange;
+                        var reachable = HexPathfinder3D.GetReachableTiles(HexGrid3D.Instance, startTile, effectiveRange);
+                        Debug.Log($"<color=#00E5FF><b>[Move Mode]</b></color> Unit: {currentSelectedUnit.UnitName} at {startTile.Coordinates}, EffectiveRange: {effectiveRange} (Base: {currentSelectedUnit.MoveRange}), Found {reachable.Count} reachable tiles.");
                         foreach (var tile in reachable)
                         {
                             activeTargetTiles.Add(tile);
@@ -369,6 +382,26 @@ namespace ElementalHexTactics3D.InputHandling
             switch (currentMode)
             {
                 case UnitActionMode.Move:
+                    if (currentSelectedUnit.HasMovedThisTurn)
+                    {
+                        Debug.LogWarning($"[Move] {currentSelectedUnit.UnitName} has already moved this turn!");
+                        break;
+                    }
+
+                    if (currentSelectedUnit.EffectiveMoveRange <= 0)
+                    {
+                        Debug.LogWarning($"[Move] {currentSelectedUnit.UnitName} is immobilized and cannot move!");
+                        ClearTargetHighlights();
+                        SetActionMode(UnitActionMode.None);
+                        break;
+                    }
+
+                    if (!activeTargetTiles.Contains(targetTile))
+                    {
+                        Debug.LogWarning($"[Move] Target tile {targetTile.Coordinates} is not in reachable range!");
+                        break;
+                    }
+
                     HexTile3D startTile = currentSelectedUnit.CurrentTile;
                     if (startTile == null)
                     {
@@ -376,7 +409,7 @@ namespace ElementalHexTactics3D.InputHandling
                         startTile = currentSelectedUnit.CurrentTile;
                     }
                     var path = HexPathfinder3D.FindPath(HexGrid3D.Instance, startTile, targetTile);
-                    if (path != null && path.Count > 0)
+                    if (path != null && path.Count > 0 && path.Count <= currentSelectedUnit.EffectiveMoveRange)
                     {
                         currentSelectedUnit.HasMovedThisTurn = true;
                         ClearTargetHighlights();
@@ -385,7 +418,7 @@ namespace ElementalHexTactics3D.InputHandling
                     }
                     else
                     {
-                        Debug.LogWarning($"[Move] No valid path found to {targetTile.Coordinates}");
+                        Debug.LogWarning($"[Move] No valid path within range found to {targetTile.Coordinates} (Path steps: {path?.Count}, MaxAllowed: {currentSelectedUnit.EffectiveMoveRange})");
                     }
                     break;
 
@@ -769,7 +802,7 @@ namespace ElementalHexTactics3D.InputHandling
                 string fColor = (currentSelectedUnit.Faction == UnitFaction.Player) ? "#64B5F6" : "#EF5350";
                 string statusText = currentSelectedUnit.IsExhausted ? "<color=#B0BEC5>[Exhausted]</color>" : "<color=#81C784>[Ready]</color>";
                 GUILayout.Label($"<color={fColor}><b>Selected:</b> {currentSelectedUnit.UnitName}</color> ({currentSelectedUnit.Archetype}) {statusText}");
-                GUILayout.Label($"<b>HP:</b> {currentSelectedUnit.CurrentHealth}/{currentSelectedUnit.MaxHealth} | <b>ATK:</b> {currentSelectedUnit.EffectiveAttackDamage} | <b>Moved:</b> {(currentSelectedUnit.HasMovedThisTurn ? "<color=#B0BEC5>✓</color>" : "<color=#81C784>✗</color>")} | <b>Acted:</b> {(currentSelectedUnit.HasActedThisTurn ? "<color=#B0BEC5>✓</color>" : "<color=#81C784>✗</color>")}");
+                GUILayout.Label($"<b>HP:</b> {currentSelectedUnit.CurrentHealth}/{currentSelectedUnit.MaxHealth} | <b>ATK:</b> {currentSelectedUnit.EffectiveAttackDamage} | <b>Move:</b> {currentSelectedUnit.EffectiveMoveRange} | <b>Moved:</b> {(currentSelectedUnit.HasMovedThisTurn ? "<color=#B0BEC5>✓</color>" : "<color=#81C784>✗</color>")} | <b>Acted:</b> {(currentSelectedUnit.HasActedThisTurn ? "<color=#B0BEC5>✓</color>" : "<color=#81C784>✗</color>")}");
 
                 string attuneColor = (currentSelectedUnit.BonusAttackDamage > 0) ? "#FFA726" : (currentSelectedUnit.BonusMoveRange > 0 ? "#29B6F6" : "#CFD8DC");
                 GUILayout.Label($"<b>Attunement:</b> <color={attuneColor}>{currentSelectedUnit.CurrentAttunementName}</color> | <b>Cores:</b> <color=#FFD54F>★ {currentSelectedUnit.ElementalCores}</color>");
@@ -796,7 +829,7 @@ namespace ElementalHexTactics3D.InputHandling
             bool isBattleActive = (TurnManager3D.Instance == null || TurnManager3D.Instance.Result == BattleResult.InProgress);
             bool isPlayerTurn = isBattleActive && (TurnManager3D.Instance == null || TurnManager3D.Instance.IsPlayerTurn);
             bool canAct = isPlayerTurn && (currentSelectedUnit != null && currentSelectedUnit.Faction == UnitFaction.Player);
-            bool canMove = canAct && !currentSelectedUnit.HasMovedThisTurn;
+            bool canMove = canAct && !currentSelectedUnit.HasMovedThisTurn && currentSelectedUnit.EffectiveMoveRange > 0;
             bool canCombat = canAct && !currentSelectedUnit.HasActedThisTurn;
 
             float barWidth = 800f;
@@ -817,9 +850,23 @@ namespace ElementalHexTactics3D.InputHandling
             // 1. Move Button (Universal)
             Rect moveRect = new Rect(curX, btnY, 80f, btnH);
             curX += 80f + spacing;
-            string moveLabel = (currentSelectedUnit != null && currentSelectedUnit.HasMovedThisTurn)
-                ? "<color=#90A4AE><b>[Moved]</b></color>"
-                : (currentMode == UnitActionMode.Move ? "<b>[Moving]</b>" : "Move");
+            string moveLabel;
+            if (currentSelectedUnit != null && currentSelectedUnit.HasMovedThisTurn)
+            {
+                moveLabel = "<color=#90A4AE><b>[Moved]</b></color>";
+            }
+            else if (currentSelectedUnit != null && currentSelectedUnit.IsImmobilized)
+            {
+                moveLabel = "<color=#EF5350><b>[Trapped]</b></color>";
+            }
+            else if (currentSelectedUnit != null && currentSelectedUnit.IsCrippled)
+            {
+                moveLabel = (currentMode == UnitActionMode.Move) ? "<b>[Move 1]</b>" : "Move (1)";
+            }
+            else
+            {
+                moveLabel = (currentMode == UnitActionMode.Move) ? "<b>[Moving]</b>" : "Move";
+            }
             if (DrawOpaqueButton(moveRect, moveLabel,
                 new Color(0.18f, 0.32f, 0.48f, 1f), new Color(0.15f, 0.55f, 0.90f, 1f),
                 currentMode == UnitActionMode.Move, canMove))
