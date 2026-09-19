@@ -35,10 +35,19 @@ namespace ElementalHexTactics3D.Turn
         [SerializeField] private int currentRound = 1;
         [SerializeField] private BattleResult result = BattleResult.InProgress;
 
+        [Header("Debug & Environment Testing")]
+        [Tooltip("When checked in the Inspector, Enemy AI is disabled: enemies skip moving and attacking, allowing you to freely test spells, terrain reactions, and mechanics.")]
+        [SerializeField] private bool disableEnemyAI = false;
+
         public TurnPhase CurrentPhase => currentPhase;
         public int CurrentRound => currentRound;
         public bool IsPlayerTurn => currentPhase == TurnPhase.PlayerTurn;
         public BattleResult Result => result;
+        public bool DisableEnemyAI
+        {
+            get => disableEnemyAI;
+            set => disableEnemyAI = value;
+        }
 
         public System.Action<TurnPhase> OnTurnChanged;
         public System.Action<BattleResult> OnBattleEnded;
@@ -52,6 +61,20 @@ namespace ElementalHexTactics3D.Turn
         private void Start()
         {
             StartPlayerTurn();
+        }
+
+        private void Update()
+        {
+            // Hotkey F1 to toggle Enemy AI on/off during play
+            if (UnityEngine.InputSystem.Keyboard.current != null &&
+                UnityEngine.InputSystem.Keyboard.current.f1Key.wasPressedThisFrame)
+            {
+                disableEnemyAI = !disableEnemyAI;
+                string msg = disableEnemyAI ? "Enemy AI DISABLED (Testing Mode)" : "Enemy AI ENABLED";
+                Color col = disableEnemyAI ? new Color(0.95f, 0.45f, 0.2f) : new Color(0.35f, 0.85f, 0.45f);
+                CombatFeedbackManager.Instance?.ShowBanner("DEBUG AI TOGGLE", msg, 1.0f, col);
+                Debug.Log($"<color=#FFD54F><b>[Debug]</b></color> {msg}");
+            }
         }
 
         public void EndPlayerTurn()
@@ -214,7 +237,18 @@ namespace ElementalHexTactics3D.Turn
             }
 
             CombatFeedbackManager.Instance.ShowBanner("⚔️ ENEMY PHASE", "Enemy squad is coordinating attacks...", 1.2f, new Color(0.95f, 0.25f, 0.2f));
-            yield return new WaitForSeconds(0.8f);
+            // If Enemy AI is disabled for environment testing, skip enemy actions entirely!
+            if (disableEnemyAI)
+            {
+                CombatFeedbackManager.Instance.ShowBanner("ENEMY PHASE SKIPPED", "Enemy AI Disabled (Testing Mode)", 0.8f, new Color(0.6f, 0.65f, 0.75f));
+                yield return new WaitForSeconds(0.4f);
+
+                // Advance Round & Return directly to Player
+                currentRound++;
+                StartPlayerTurn();
+                CombatFeedbackManager.Instance?.ShowBanner($"ROUND {currentRound} - PLAYER TURN", "Your turn, Commander!", 1.0f, new Color(0.25f, 0.7f, 1.0f));
+                yield break;
+            }
 
             // Resolve Environmental Hazards for Enemy units standing in Magma / Deep Water
             yield return ResolveFactionHazards(UnitFaction.Enemy);

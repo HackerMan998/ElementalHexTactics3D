@@ -770,7 +770,7 @@ namespace ElementalHexTactics3D.InputHandling
 
         private void DrawTacticalInfoHUD()
         {
-            hudRect = new Rect(16, 16, 400, 185);
+            hudRect = new Rect(16, 16, 420, 185);
             DrawSolidPanel(hudRect, new Color(0.08f, 0.10f, 0.14f, 0.95f), new Color(0.25f, 0.35f, 0.48f, 1f), 2);
 
             GUILayout.BeginArea(new Rect(hudRect.x + 12, hudRect.y + 10, hudRect.width - 24, hudRect.height - 20));
@@ -782,6 +782,17 @@ namespace ElementalHexTactics3D.InputHandling
             GUILayout.BeginHorizontal();
             GUILayout.Label($"<size=15><b>Elemental Hex Tactics 3D</b></size> | {roundText}");
             GUILayout.FlexibleSpace();
+
+            if (TurnManager3D.Instance != null)
+            {
+                bool aiOff = TurnManager3D.Instance.DisableEnemyAI;
+                string aiLabel = aiOff ? "<color=#EF5350>🤖 AI: OFF</color>" : "<color=#81C784>🤖 AI: ON</color>";
+                if (GUILayout.Button(aiLabel, GUILayout.Width(75), GUILayout.Height(20)))
+                {
+                    TurnManager3D.Instance.DisableEnemyAI = !TurnManager3D.Instance.DisableEnemyAI;
+                }
+                GUILayout.Space(4);
+            }
 
             bool isMuted = (SoundManager3D.Instance != null && SoundManager3D.Instance.IsMuted);
             string audioLabel = isMuted ? "🔇 Audio" : "🔊 Audio";
