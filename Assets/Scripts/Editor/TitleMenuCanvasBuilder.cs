@@ -139,7 +139,8 @@ namespace ElementalHexTactics3D.Editor
             SetStretchAll(modalsContainer.GetComponent<RectTransform>());
 
             // Modal: Story Prologue
-            GameObject storyModalObj = CreateModalPanel("Modal_StoryPrologue", modalsContainer.transform, "📖 STORY PROLOGUE: THE WEAKEST TAMER'S AWAKENING", fontBold, panelFrame, width: 840f, height: 520f);
+            GameObject storyCardObj;
+            GameObject storyModalObj = CreateModalPanel("Modal_StoryPrologue", modalsContainer.transform, "📖 STORY PROLOGUE: THE WEAKEST TAMER'S AWAKENING", fontBold, panelFrame, 840f, 520f, out storyCardObj);
             string storyContent = 
                 "<b><color=#38BDF8>[ The Reincarnation ]</color></b>\n" +
                 "You were summoned from modern Earth into <b>Terranox</b>, a brutal fantasy realm where nobility and authority belong exclusively to beast summoners.\n\n" +
@@ -149,12 +150,13 @@ namespace ElementalHexTactics3D.Editor
                 "Unknown to anyone, you possess the God-Given Cheat: <b>[Beast Talker & Primordial Resonance]</b>. You understand the souls and cries of beasts! When treated with empathy, your beasts awaken dormant elemental powers, physically terraforming the 3D hex earth!\n\n" +
                 "<b><color=#34D399>[ Your Mission: Break Chains & Awaken Titans ]</color></b>\n" +
                 "Enter dangerous 3D dungeon plateaus, defeat corrupt summoners to shatter their cursed collars, gather ancient <b>Elemental Cores</b>, and hatch apocalyptic Titans!";
-            CreateUIText("Text_StoryBody", storyModalObj.transform, storyContent, fontRegular, 16, FontStyle.Normal, new Color(0.85f, 0.88f, 0.94f), new Vector2(0f, 10f), new Vector2(740f, 340f), TextAnchor.UpperLeft);
-            Button btnBackStory = CreateCustomButton("Btn_BackStory", storyModalObj.transform, "🔙 BACK TO MENU", fontBold, 18, btnNormal, Color.white, width: 260f, height: 50f);
+            CreateUIText("Text_StoryBody", storyCardObj.transform, storyContent, fontRegular, 16, FontStyle.Normal, new Color(0.85f, 0.88f, 0.94f), new Vector2(0f, 10f), new Vector2(740f, 340f), TextAnchor.UpperLeft);
+            Button btnBackStory = CreateCustomButton("Btn_BackStory", storyCardObj.transform, "🔙 BACK TO MENU", fontBold, 18, btnNormal, Color.white, width: 260f, height: 50f);
             SetAnchoredPos(btnBackStory.GetComponent<RectTransform>(), new Vector2(0f, -210f), new Vector2(260f, 50f));
 
             // Modal: How to Play
-            GameObject howToPlayModalObj = CreateModalPanel("Modal_HowToPlay", modalsContainer.transform, "🎮 TACTICAL COMBAT & TERRAFORM GUIDE", fontBold, panelFrame, width: 840f, height: 540f);
+            GameObject howToPlayCardObj;
+            GameObject howToPlayModalObj = CreateModalPanel("Modal_HowToPlay", modalsContainer.transform, "🎮 TACTICAL COMBAT & TERRAFORM GUIDE", fontBold, panelFrame, 840f, 540f, out howToPlayCardObj);
             string howToPlayContent = 
                 "<b><color=#38BDF8>1. Camera Controls:</color></b> <b>Q / E</b> Rotate 60° | <b>WASD</b> Pan Diorama | <b>Scroll</b> Zoom in/out\n" +
                 "<b><color=#38BDF8>2. Tactical Orders:</color></b> <b>Left-Click</b> to Select Unit / Cast Spell | <b>Right-Click</b> to Cancel\n\n" +
@@ -168,43 +170,45 @@ namespace ElementalHexTactics3D.Editor
                 "<b><color=#34D399>5. Siphon Land & Cataclysm:</color></b>\n" +
                 "• ⚡ <b>Siphon:</b> Your Titan drains active lava into Barren Earth to harvest <b>Elemental Cores</b>.\n" +
                 "• 🌋 <b>Magma Cataclysm:</b> Spend 3 Cores to trigger a screen-shattering volcanic blast wiping the field!";
-            CreateUIText("Text_HowToPlayBody", howToPlayModalObj.transform, howToPlayContent, fontRegular, 15, FontStyle.Normal, new Color(0.85f, 0.88f, 0.94f), new Vector2(0f, 15f), new Vector2(760f, 360f), TextAnchor.UpperLeft);
-            Button btnBackHowToPlay = CreateCustomButton("Btn_BackHowToPlay", howToPlayModalObj.transform, "🔙 BACK TO MENU", fontBold, 18, btnNormal, Color.white, width: 260f, height: 50f);
+            CreateUIText("Text_HowToPlayBody", howToPlayCardObj.transform, howToPlayContent, fontRegular, 15, FontStyle.Normal, new Color(0.85f, 0.88f, 0.94f), new Vector2(0f, 15f), new Vector2(760f, 360f), TextAnchor.UpperLeft);
+            Button btnBackHowToPlay = CreateCustomButton("Btn_BackHowToPlay", howToPlayCardObj.transform, "🔙 BACK TO MENU", fontBold, 18, btnNormal, Color.white, width: 260f, height: 50f);
             SetAnchoredPos(btnBackHowToPlay.GetComponent<RectTransform>(), new Vector2(0f, -220f), new Vector2(260f, 50f));
 
             // Modal: Options
-            GameObject optionsModalObj = CreateModalPanel("Modal_Options", modalsContainer.transform, "⚙️ GAME OPTIONS & SETTINGS", fontBold, panelFrame, width: 600f, height: 440f);
-            Button btnAudioToggle = CreateCustomButton("Btn_AudioToggle", optionsModalObj.transform, "Sound: ON", fontBold, 18, btnNormal, Color.white, width: 380f, height: 50f);
+            GameObject optionsCardObj;
+            GameObject optionsModalObj = CreateModalPanel("Modal_Options", modalsContainer.transform, "⚙️ GAME OPTIONS & SETTINGS", fontBold, panelFrame, 600f, 440f, out optionsCardObj);
+            Button btnAudioToggle = CreateCustomButton("Btn_AudioToggle", optionsCardObj.transform, "Sound: ON", fontBold, 18, btnNormal, Color.white, width: 380f, height: 50f);
             SetAnchoredPos(btnAudioToggle.GetComponent<RectTransform>(), new Vector2(0f, 70f), new Vector2(380f, 50f));
             Text txtAudioStatus = btnAudioToggle.GetComponentInChildren<Text>();
 
-            Button btnAiToggle = CreateCustomButton("Btn_AiToggle", optionsModalObj.transform, "Enemy AI: ENABLED", fontBold, 18, btnNormal, Color.white, width: 380f, height: 50f);
+            Button btnAiToggle = CreateCustomButton("Btn_AiToggle", optionsCardObj.transform, "Enemy AI: ENABLED", fontBold, 18, btnNormal, Color.white, width: 380f, height: 50f);
             SetAnchoredPos(btnAiToggle.GetComponent<RectTransform>(), new Vector2(0f, 6f), new Vector2(380f, 50f));
             Text txtAiStatus = btnAiToggle.GetComponentInChildren<Text>();
 
-            Button btnDisplayToggle = CreateCustomButton("Btn_DisplayToggle", optionsModalObj.transform, "Display: Windowed", fontBold, 18, btnNormal, Color.white, width: 380f, height: 50f);
+            Button btnDisplayToggle = CreateCustomButton("Btn_DisplayToggle", optionsCardObj.transform, "Display: Windowed", fontBold, 18, btnNormal, Color.white, width: 380f, height: 50f);
             SetAnchoredPos(btnDisplayToggle.GetComponent<RectTransform>(), new Vector2(0f, -58f), new Vector2(380f, 50f));
             Text txtDisplayStatus = btnDisplayToggle.GetComponentInChildren<Text>();
 
-            CreateUIText("Text_AiTip", optionsModalObj.transform, "Tip: You can also toggle Enemy AI during battle with hotkey F1.", fontRegular, 14, FontStyle.Italic, new Color(0.6f, 0.65f, 0.72f), new Vector2(0f, -118f), new Vector2(500f, 25f));
-            Button btnBackOptions = CreateCustomButton("Btn_BackOptions", optionsModalObj.transform, "🔙 BACK", fontBold, 18, btnNormal, Color.white, width: 220f, height: 48f);
+            CreateUIText("Text_AiTip", optionsCardObj.transform, "Tip: You can also toggle Enemy AI during battle with hotkey F1.", fontRegular, 14, FontStyle.Italic, new Color(0.6f, 0.65f, 0.72f), new Vector2(0f, -118f), new Vector2(500f, 25f));
+            Button btnBackOptions = CreateCustomButton("Btn_BackOptions", optionsCardObj.transform, "🔙 BACK", fontBold, 18, btnNormal, Color.white, width: 220f, height: 48f);
             SetAnchoredPos(btnBackOptions.GetComponent<RectTransform>(), new Vector2(0f, -170f), new Vector2(220f, 48f));
 
             // Modal: In-Game Pause
-            GameObject pauseModalObj = CreateModalPanel("Modal_InGamePause", modalsContainer.transform, "⏸️ BATTLE PAUSED", fontBold, panelFrame, width: 460f, height: 400f);
-            Button btnResume = CreateCustomButton("Btn_Resume", pauseModalObj.transform, "▶️ RESUME BATTLE", fontBold, 20, btnHighlight != null ? btnHighlight : btnNormal, new Color(1f, 0.92f, 0.45f), width: 360f, height: 52f);
+            GameObject pauseCardObj;
+            GameObject pauseModalObj = CreateModalPanel("Modal_InGamePause", modalsContainer.transform, "⏸️ BATTLE PAUSED", fontBold, panelFrame, 460f, 400f, out pauseCardObj);
+            Button btnResume = CreateCustomButton("Btn_Resume", pauseCardObj.transform, "▶️ RESUME BATTLE", fontBold, 20, btnHighlight != null ? btnHighlight : btnNormal, new Color(1f, 0.92f, 0.45f), width: 360f, height: 52f);
             SetAnchoredPos(btnResume.GetComponent<RectTransform>(), new Vector2(0f, 72f), new Vector2(360f, 52f));
 
-            Button btnPauseOptions = CreateCustomButton("Btn_PauseOptions", pauseModalObj.transform, "⚙️ OPTIONS", fontBold, 18, btnNormal, Color.white, width: 360f, height: 50f);
+            Button btnPauseOptions = CreateCustomButton("Btn_PauseOptions", pauseCardObj.transform, "⚙️ OPTIONS", fontBold, 18, btnNormal, Color.white, width: 360f, height: 50f);
             SetAnchoredPos(btnPauseOptions.GetComponent<RectTransform>(), new Vector2(0f, 10f), new Vector2(360f, 50f));
 
-            Button btnRestart = CreateCustomButton("Btn_Restart", pauseModalObj.transform, "🔄 RESTART BATTLE", fontBold, 18, btnNormal, new Color(0.98f, 0.65f, 0.25f), width: 360f, height: 50f);
+            Button btnRestart = CreateCustomButton("Btn_Restart", pauseCardObj.transform, "🔄 RESTART BATTLE", fontBold, 18, btnNormal, new Color(0.98f, 0.65f, 0.25f), width: 360f, height: 50f);
             SetAnchoredPos(btnRestart.GetComponent<RectTransform>(), new Vector2(0f, -50f), new Vector2(360f, 50f));
 
-            Button btnReturnTitle = CreateCustomButton("Btn_ReturnTitle", pauseModalObj.transform, "🏠 MAIN MENU", fontBold, 18, btnNormal, new Color(0.95f, 0.45f, 0.45f), width: 360f, height: 50f);
+            Button btnReturnTitle = CreateCustomButton("Btn_ReturnTitle", pauseCardObj.transform, "🏠 MAIN MENU", fontBold, 18, btnNormal, new Color(0.95f, 0.45f, 0.45f), width: 360f, height: 50f);
             SetAnchoredPos(btnReturnTitle.GetComponent<RectTransform>(), new Vector2(0f, -112f), new Vector2(360f, 50f));
 
-            // Hide modals by default
+            // Hide modals by default (Hides modalRoot AND its Backdrop completely!)
             storyModalObj.SetActive(false);
             howToPlayModalObj.SetActive(false);
             optionsModalObj.SetActive(false);
@@ -261,6 +265,18 @@ namespace ElementalHexTactics3D.Editor
             // Mark Scene Dirty
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
             Debug.Log("<color=#4CAF50><b>[2D UI Builder] SUCCESS!</b></color> 2D Canvas hierarchy, custom fantasy buttons, and modals created cleanly in scene!");
+        }
+
+        [MenuItem("Elemental Hex 3D/Remove 2D Title Canvas", false, 3)]
+        public static void RemoveTitleCanvas()
+        {
+            GameObject canvas = GameObject.Find("Canvas_TitleMenu");
+            if (canvas != null)
+            {
+                Undo.DestroyObjectImmediate(canvas);
+                EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+                Debug.Log("<color=#FF9800><b>[2D UI Builder]</b></color> Canvas_TitleMenu removed from scene.");
+            }
         }
 
         private static void ConfigureSpriteImporter(string assetPath)
@@ -373,7 +389,7 @@ namespace ElementalHexTactics3D.Editor
             return btn;
         }
 
-        private static GameObject CreateModalPanel(string name, Transform parent, string titleText, Font font, Sprite panelFrame, float width = 740f, float height = 480f)
+        private static GameObject CreateModalPanel(string name, Transform parent, string titleText, Font font, Sprite panelFrame, float width, float height, out GameObject cardObj)
         {
             GameObject modalRoot = CreateUIObject(name, parent);
             SetStretchAll(modalRoot.GetComponent<RectTransform>());
@@ -385,7 +401,7 @@ namespace ElementalHexTactics3D.Editor
             bdImg.color = new Color(0f, 0f, 0f, 0.78f);
 
             // Modal Card Frame
-            GameObject cardObj = CreateUIObject("CardFrame", modalRoot.transform);
+            cardObj = CreateUIObject("CardFrame", modalRoot.transform);
             RectTransform cardRect = cardObj.GetComponent<RectTransform>();
             cardRect.anchorMin = new Vector2(0.5f, 0.5f);
             cardRect.anchorMax = new Vector2(0.5f, 0.5f);
@@ -408,7 +424,7 @@ namespace ElementalHexTactics3D.Editor
             // Header Title Text
             CreateUIText("Text_ModalTitle", cardObj.transform, titleText, font, 21, FontStyle.Bold, new Color(0.98f, 0.75f, 0.15f), new Vector2(0f, (height * 0.5f) - 34f), new Vector2(width - 60f, 32f));
 
-            return cardObj;
+            return modalRoot;
         }
 
         private static Text CreateUIText(string name, Transform parent, string content, Font font, int fontSize, FontStyle style, Color color, Vector2 anchoredPos, Vector2 size, TextAnchor alignment = TextAnchor.MiddleCenter)

@@ -77,25 +77,9 @@ namespace ElementalHexTactics3D.Editor
             // 12. Setup HD-2D Post-Processing Volume (Bloom, Tilt-Shift DoF, Tonemapping)
             SetupPostProcessingVolume();
 
-            // 13. Setup Title & Menu Manager (Light Novel Beast Talker Title Screen)
-            SetupTitleMenu();
-
             // Mark scene dirty so user can save
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
-            Debug.Log("<color=#4CAF50><b>[ElementalHex3D]</b></color> 3D Hex Battlefield, 2.5D Units, Combat Systems & Title Menu setup complete!");
-        }
-
-        private static void SetupTitleMenu()
-        {
-            var menu = Object.FindFirstObjectByType<ElementalHexTactics3D.UI.TitleMenuManager3D>();
-            if (menu == null)
-            {
-                GameObject menuObj = new GameObject("TitleMenuManager3D");
-                menuObj.AddComponent<ElementalHexTactics3D.UI.TitleMenuManager3D>();
-            }
-
-            // Automatically build the 2D Title Canvas with custom generated fantasy RPG UI assets
-            TitleMenuCanvasBuilder.GenerateTitleCanvas();
+            Debug.Log("<color=#4CAF50><b>[ElementalHex3D]</b></color> 3D Hex Battlefield, 2.5D Units & Combat Systems setup complete!");
         }
 
         private static void SetupSoundManager()
