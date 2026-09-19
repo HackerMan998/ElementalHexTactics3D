@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using ElementalHexTactics3D.Units;
 using ElementalHexTactics3D.Turn;
+using ElementalHexTactics3D.UI;
 
 namespace ElementalHexTactics3D.Combat
 {
@@ -199,6 +200,11 @@ namespace ElementalHexTactics3D.Combat
         private void OnGUI()
         {
             if (!Application.isPlaying || mainCamera == null) return;
+
+            bool isMenuBlocking = (TitleMenuCanvasUI.Instance != null && (!TitleMenuCanvasUI.Instance.IsInGame || TitleMenuCanvasUI.Instance.IsPaused)) ||
+                                  (TitleMenuManager3D.Instance != null && (!TitleMenuManager3D.Instance.IsInGame || TitleMenuManager3D.Instance.IsPaused));
+            if (isMenuBlocking) return;
+
             EnsureSolidTexture();
 
             DrawTurnBanner();
