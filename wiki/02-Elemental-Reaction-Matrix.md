@@ -19,23 +19,66 @@ flowchart TD
 
 ---
 
-## 📋 Comprehensive Reaction Lookup Table
+---
 
-| Target Tile State | Spell Cast | Resulting State | Tier | Reaction Name | Tactical Effect |
-| :--- | :--- | :--- | :---: | :--- | :--- |
-| **Magma (T2 Fire)** | `💧 Water` | **Scorched** | 1 | **Steam Cataclysm** | Magma cools to Scorched Earth; **violently erupts Steam Cloud on exactly 3 random adjacent neighbor hexes**! |
-| **Scorched (T1 Fire)** | `💧 Water` | **Steam** | 1 | **Steam Eruption** | Quenches burning embers into neutral dry earth and leaves a local **Steam Cloud**. |
-| **Water (T1 Water)** | `🔥 Fire` | **Steam** | 1 | **Steam Cloud** | Water instantly boils away into a thick, obscuring **Steam Cloud**. |
-| **Scorched (T1 Fire)** | `🔥 Fire` | **Magma** | 2 | **Magma Surge** | Intensifies burning embers into molten **Magma (Hazard: 3 Burn Dmg)**. |
-| **Water (T1 Water)** | `💧 Water` | **Water** | 2 | **Deep Water Surge** | Deepens shallow water into treacherous **Deep Water (Mobility Trap)**. |
-| **Water (T1/T2)** | `⛰️ Earth` | **Mud** | 1 | **Quagmire Mud Trap** | Collapses heavy earth into water, creating a sticky **Mud Trap (Immobilizes units)**. |
-| **Mud (Quagmire)** | `💧 Water` | **Water** | 1 | **Flooded Mud** | Dilutes thick mud back into shallow surface water. |
-| **Mud (Quagmire)** | `🔥 Fire` | **Scorched** | 1 | **Baked Mud** | Bakes wet mud with intense flame into dry, scorched ground. |
-| **Mud (Quagmire)** | `⛰️ Earth` | **Barren** | 0 | **Earth Fill** | Compacts extra soil into the quagmire to restore firm dry earth. |
-| **Magma / Scorched** | `⛰️ Earth` | **Barren** | 0 | **Earth Smother** | Smothers glowing embers with earth, cooling the tile to neutral ground. |
-| **Barren / Grass / Steam** | `⛰️ Earth` | **Stone Pillar** | 2 | **Earth Spire** | Raises a solid **Stone Pillar obstacle** (+1.0m elevation) for **Wall-Slam setups**! |
-| **Barren / Grass** | `🔥 Fire` | **Scorched** | 1 | **Scorched Earth** | Chars vegetation and soil into Scorched Earth. |
-| **Barren / Grass** | `💧 Water` | **Water** | 1 | **Water Inundation** | Floods dry soil with Shallow Water. |
+## ⚡ Quick 2D Cross-Reference Matrix
+
+The fastest way to look up any interaction: find the **Target Ground** row on the left, then look under the **Spell Cast** column.
+
+| Target Ground State | 🔥 Fireball (Fire) | 💧 Water Surge (Water) | ⛰️ Earth Spire (Earth) |
+| :--- | :--- | :--- | :--- |
+| **Barren / Grass (T0)** | **Scorched Earth (T1)** | **Shallow Water (T1)** | **Stone Pillar (T2 Wall)** |
+| **Scorched Earth (T1)** | **Molten Magma (T2)** *(3 Dmg Hazard)* | **Steam Cloud (T1)** *(Local Vapor)* | **Barren (T0)** *(Embers Smothered)* |
+| **Molten Magma (T2)** | *(Refreshes Magma)* | **Scorched (T1) + 💥 3 Steam Eruptions!** | **Barren (T0)** *(Lava Smothered)* |
+| **Shallow Water (T1)** | **Steam Cloud (T1)** *(Vapor Cover)* | **Deep Water (T2)** *(Mobility Trap)* | **Mud Quagmire (T1)** *(Immobilize Trap)* |
+| **Deep Water (T2)** | **Steam Cloud (T1)** *(Vapor Cover)* | *(Refreshes Deep Water)* | **Mud Quagmire (T1)** *(Immobilize Trap)* |
+| **Mud Quagmire (T1)** | **Baked Mud (Scorched T1)** | **Flooded Mud (Water T1)** | **Barren (T0)** *(Quagmire Compacted)* |
+| **Steam Cloud (T1)** | **Scorched Earth (T1)** | **Shallow Water (T1)** | **Stone Pillar (T2 Wall)** |
+
+---
+
+## 🎯 Reactions Grouped by Spell Cast
+
+Looking to see what a specific spell in your action bar can accomplish? Check your spell below:
+
+### 💧 Water Surge (`💧 Water`)
+| When Cast On... | Resulting State | Tier | Reaction Name | Tactical Effect |
+| :--- | :--- | :---: | :--- | :--- |
+| **Molten Magma (T2)** | **Scorched Earth** | 1 | **Steam Cataclysm** | Cools lava to Scorched Earth; **violently erupts Steam on 3 random adjacent hexes**! |
+| **Scorched Earth (T1)** | **Steam Cloud** | 1 | **Steam Eruption** | Quenches burning embers into neutral ground and creates a local Steam Cloud. |
+| **Shallow Water (T1)** | **Deep Water** | 2 | **Deep Water Surge** | Deepens water into treacherous **Deep Water (Immobilize & Cripple Trap)**. |
+| **Mud Quagmire (T1)** | **Shallow Water** | 1 | **Flooded Mud** | Dilutes thick mud back into shallow surface water. |
+| **Barren / Grass (T0)** | **Shallow Water** | 1 | **Water Inundation** | Floods dry soil with shallow water. |
+
+### 🔥 Fireball (`🔥 Fire`)
+| When Cast On... | Resulting State | Tier | Reaction Name | Tactical Effect |
+| :--- | :--- | :---: | :--- | :--- |
+| **Water (T1 or T2)** | **Steam Cloud** | 1 | **Steam Cloud** | Instantly boils water away into an obscuring **Steam Cloud (Vapor Cover)**. |
+| **Scorched Earth (T1)** | **Molten Magma** | 2 | **Magma Surge** | Intensifies hot embers into molten **Magma (3 Burn Dmg Hazard)**. |
+| **Mud Quagmire (T1)** | **Scorched Earth** | 1 | **Baked Mud** | Bakes wet mud with intense flame into dry, scorched ground. |
+| **Barren / Grass (T0)** | **Scorched Earth** | 1 | **Scorched Earth** | Chars vegetation and dry soil into Scorched Earth. |
+
+### ⛰️ Earth Spire (`⛰️ Earth`)
+| When Cast On... | Resulting State | Tier | Reaction Name | Tactical Effect |
+| :--- | :--- | :---: | :--- | :--- |
+| **Water (T1 or T2)** | **Mud Quagmire** | 1 | **Quagmire Mud Trap** | Mixes earth into water to create sticky **Mud (Immobilize & Cripple Trap)**. |
+| **Barren / Grass / Steam** | **Stone Pillar** | 2 | **Earth Spire** | Raises a solid **+1.0m Stone Pillar obstacle** for **Wall-Slam combos**! |
+| **Magma / Scorched** | **Barren Earth** | 0 | **Earth Smother** | Smothers glowing embers or molten rock, resetting tile to neutral ground. |
+| **Mud Quagmire (T1)** | **Barren Earth** | 0 | **Earth Fill** | Compacts extra soil into the quagmire to restore firm dry earth. |
+
+---
+
+## 🧪 Tactical Recipe Finder ("How Do I Create...?")
+
+- **💨 Want a Smokescreen / Mist (Steam Cover)?**
+  - *Best:* Cast `💧 Water` on `🌋 Magma` → Quenches lava + creates **3 adjacent random steam clouds**!
+  - *Fast:* Cast `🔥 Fire` on `💧 Water` or `💧 Water` on `🔥 Scorched` → Creates 1 local steam cloud.
+- **💩 Want an Immobility Trap (Mud Quagmire)?**
+  - Cast `⛰️ Earth Spire` on any `💧 Water` tile → Instantly creates a sticky Mud Trap (Turn 1: Immobilized, Turn 2: Crippled).
+- **⛰️ Want a Solid Wall / Cover (Stone Pillar)?**
+  - Cast `⛰️ Earth Spire` on any `Barren`, `Grass`, or `Steam` tile → Raises a +1.0m obstacle for **`💥 WALL SLAM! -2`** combos.
+- **🌋 Want a Molten Hazard (Magma)?**
+  - Cast `🔥 Fire` on `🔥 Scorched Earth` → Upgrades to Molten Magma (3 Burn Dmg to non-titans).
 
 ---
 
