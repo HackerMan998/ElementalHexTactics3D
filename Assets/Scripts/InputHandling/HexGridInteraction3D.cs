@@ -82,8 +82,9 @@ namespace ElementalHexTactics3D.InputHandling
                 if (mainCamera == null) return;
             }
 
-            bool isMenuBlocking = (TitleMenuCanvasUI.Instance != null && (!TitleMenuCanvasUI.Instance.IsInGame || TitleMenuCanvasUI.Instance.IsPaused)) ||
-                                  (TitleMenuManager3D.Instance != null && (!TitleMenuManager3D.Instance.IsInGame || TitleMenuManager3D.Instance.IsPaused));
+            bool isMenuBlocking = TitleMenuCanvasUI.Instance != null
+                ? (!TitleMenuCanvasUI.Instance.IsInGame || TitleMenuCanvasUI.Instance.IsPaused)
+                : (TitleMenuManager3D.Instance != null && (!TitleMenuManager3D.Instance.IsInGame || TitleMenuManager3D.Instance.IsPaused));
 
             if (isMenuBlocking)
             {
@@ -772,8 +773,9 @@ namespace ElementalHexTactics3D.InputHandling
 
             EnsureSolidTexture();
 
-            bool isMenuBlocking = (TitleMenuCanvasUI.Instance != null && (!TitleMenuCanvasUI.Instance.IsInGame || TitleMenuCanvasUI.Instance.IsPaused)) ||
-                                  (TitleMenuManager3D.Instance != null && (!TitleMenuManager3D.Instance.IsInGame || TitleMenuManager3D.Instance.IsPaused));
+            bool isMenuBlocking = TitleMenuCanvasUI.Instance != null
+                ? (!TitleMenuCanvasUI.Instance.IsInGame || TitleMenuCanvasUI.Instance.IsPaused)
+                : (TitleMenuManager3D.Instance != null && (!TitleMenuManager3D.Instance.IsInGame || TitleMenuManager3D.Instance.IsPaused));
 
             if (isMenuBlocking)
             {

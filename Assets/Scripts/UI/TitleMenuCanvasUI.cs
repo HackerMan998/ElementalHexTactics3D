@@ -75,6 +75,125 @@ namespace ElementalHexTactics3D.UI
                 Destroy(gameObject);
                 return;
             }
+
+            // If legacy TitleMenuManager3D exists, disable it so it doesn't block gameplay input/HUD
+            GameObject legacy = GameObject.Find("TitleMenuManager3D");
+            if (legacy != null && legacy != gameObject)
+            {
+                legacy.SetActive(false);
+            }
+
+            AdjustModalLayouts();
+        }
+
+        /// <summary>
+        /// Ensures titles sit cleanly on the inner dark slate area rather than the gold border,
+        /// even if the scene was generated with an earlier layout version.
+        /// </summary>
+        private void AdjustModalLayouts()
+        {
+            // 1. Pause Modal
+            if (pauseModal != null)
+            {
+                Transform card = pauseModal.transform.Find("CardFrame");
+                if (card != null)
+                {
+                    RectTransform cRect = card.GetComponent<RectTransform>();
+                    if (cRect != null) cRect.sizeDelta = new Vector2(480f, 450f);
+
+                    Transform tTrans = card.Find("Text_ModalTitle");
+                    if (tTrans != null)
+                    {
+                        RectTransform tRect = tTrans.GetComponent<RectTransform>();
+                        if (tRect != null)
+                        {
+                            tRect.anchoredPosition = new Vector2(0f, 126f);
+                            tRect.sizeDelta = new Vector2(420f, 34f);
+                        }
+                        Text t = tTrans.GetComponent<Text>();
+                        if (t != null)
+                        {
+                            t.text = "✦ BATTLE PAUSED ✦";
+                            t.color = new Color(1f, 0.88f, 0.38f);
+                        }
+                    }
+
+                    if (btnResume != null)
+                    {
+                        RectTransform r = btnResume.GetComponent<RectTransform>();
+                        if (r != null) { r.anchoredPosition = new Vector2(0f, 60f); r.sizeDelta = new Vector2(360f, 48f); }
+                    }
+                    if (btnPauseOptions != null)
+                    {
+                        RectTransform r = btnPauseOptions.GetComponent<RectTransform>();
+                        if (r != null) { r.anchoredPosition = new Vector2(0f, 4f); r.sizeDelta = new Vector2(360f, 48f); }
+                    }
+                    if (btnRestart != null)
+                    {
+                        RectTransform r = btnRestart.GetComponent<RectTransform>();
+                        if (r != null) { r.anchoredPosition = new Vector2(0f, -52f); r.sizeDelta = new Vector2(360f, 48f); }
+                    }
+                    if (btnReturnTitle != null)
+                    {
+                        RectTransform r = btnReturnTitle.GetComponent<RectTransform>();
+                        if (r != null) { r.anchoredPosition = new Vector2(0f, -108f); r.sizeDelta = new Vector2(360f, 48f); }
+                    }
+                }
+            }
+
+            // 2. Options Modal
+            if (optionsModal != null)
+            {
+                Transform card = optionsModal.transform.Find("CardFrame");
+                if (card != null)
+                {
+                    RectTransform cRect = card.GetComponent<RectTransform>();
+                    if (cRect != null) cRect.sizeDelta = new Vector2(600f, 470f);
+
+                    Transform tTrans = card.Find("Text_ModalTitle");
+                    if (tTrans != null)
+                    {
+                        RectTransform tRect = tTrans.GetComponent<RectTransform>();
+                        if (tRect != null) tRect.anchoredPosition = new Vector2(0f, 160f);
+                    }
+                }
+            }
+
+            // 3. Story Modal
+            if (storyModal != null)
+            {
+                Transform card = storyModal.transform.Find("CardFrame");
+                if (card != null)
+                {
+                    RectTransform cRect = card.GetComponent<RectTransform>();
+                    if (cRect != null) cRect.sizeDelta = new Vector2(860f, 560f);
+
+                    Transform tTrans = card.Find("Text_ModalTitle");
+                    if (tTrans != null)
+                    {
+                        RectTransform tRect = tTrans.GetComponent<RectTransform>();
+                        if (tRect != null) tRect.anchoredPosition = new Vector2(0f, 195f);
+                    }
+                }
+            }
+
+            // 4. How To Play Modal
+            if (howToPlayModal != null)
+            {
+                Transform card = howToPlayModal.transform.Find("CardFrame");
+                if (card != null)
+                {
+                    RectTransform cRect = card.GetComponent<RectTransform>();
+                    if (cRect != null) cRect.sizeDelta = new Vector2(860f, 580f);
+
+                    Transform tTrans = card.Find("Text_ModalTitle");
+                    if (tTrans != null)
+                    {
+                        RectTransform tRect = tTrans.GetComponent<RectTransform>();
+                        if (tRect != null) tRect.anchoredPosition = new Vector2(0f, 205f);
+                    }
+                }
+            }
         }
 
         private void Start()
@@ -126,6 +245,11 @@ namespace ElementalHexTactics3D.UI
             if (titlePanel != null) titlePanel.SetActive(true);
             if (inGameHudPanel != null) inGameHudPanel.SetActive(false);
             CloseAllModals();
+
+            if (TitleMenuManager3D.Instance != null)
+            {
+                TitleMenuManager3D.Instance.ReturnToTitle();
+            }
         }
 
         public void OnPlayClicked()
@@ -137,6 +261,11 @@ namespace ElementalHexTactics3D.UI
             if (titlePanel != null) titlePanel.SetActive(false);
             if (inGameHudPanel != null) inGameHudPanel.SetActive(true);
             CloseAllModals();
+
+            if (TitleMenuManager3D.Instance != null)
+            {
+                TitleMenuManager3D.Instance.StartGame();
+            }
 
             if (TacticalCameraController.Instance != null)
             {
@@ -159,6 +288,11 @@ namespace ElementalHexTactics3D.UI
             PlaySoundClick();
             isPaused = true;
             if (pauseModal != null) pauseModal.SetActive(true);
+
+            if (TitleMenuManager3D.Instance != null)
+            {
+                TitleMenuManager3D.Instance.OpenPauseMenu();
+            }
         }
 
         public void ResumeGame()
@@ -167,6 +301,11 @@ namespace ElementalHexTactics3D.UI
             isPaused = false;
             if (pauseModal != null) pauseModal.SetActive(false);
             CloseAllModals();
+
+            if (TitleMenuManager3D.Instance != null)
+            {
+                TitleMenuManager3D.Instance.ResumeGame();
+            }
         }
 
         public void OpenModal(GameObject modal)

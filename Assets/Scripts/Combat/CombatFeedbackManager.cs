@@ -201,8 +201,9 @@ namespace ElementalHexTactics3D.Combat
         {
             if (!Application.isPlaying || mainCamera == null) return;
 
-            bool isMenuBlocking = (TitleMenuCanvasUI.Instance != null && (!TitleMenuCanvasUI.Instance.IsInGame || TitleMenuCanvasUI.Instance.IsPaused)) ||
-                                  (TitleMenuManager3D.Instance != null && (!TitleMenuManager3D.Instance.IsInGame || TitleMenuManager3D.Instance.IsPaused));
+            bool isMenuBlocking = TitleMenuCanvasUI.Instance != null
+                ? (!TitleMenuCanvasUI.Instance.IsInGame || TitleMenuCanvasUI.Instance.IsPaused)
+                : (TitleMenuManager3D.Instance != null && (!TitleMenuManager3D.Instance.IsInGame || TitleMenuManager3D.Instance.IsPaused));
             if (isMenuBlocking) return;
 
             EnsureSolidTexture();
